@@ -36,7 +36,10 @@ public class prijava {
                 try {
                     String newPass = con.Encrypt(String.valueOf(geslo));
 
-                    System.out.println(newPass);
+                    //con.CheckUser(email, newPass);
+
+                    System.out.println(con.CheckUser(email, newPass));
+                    System.out.println(email + " " + newPass);
 
                     //con.CheckUser(email, newPass);
                 } catch (Exception e) {

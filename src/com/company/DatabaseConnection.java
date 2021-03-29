@@ -110,7 +110,7 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
 
-            String sql = "INSERT INTO admini(username, pass) VALUES ('" + mail + "', '" + passs + "')";
+            String sql = "INSERT INTO admini(email, pass) VALUES ('" + mail + "', '" + passs + "')";
             stmt.executeUpdate(sql);
             conn.close();
         }
@@ -124,16 +124,19 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
 
-            String sql = "SELECT username, pass FROM admini;";
+            String sql = "SELECT email, pass FROM admini;";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
-                String ime = rs.getString("ime");
-                String post_st = rs.getString("post_st");
+                String mail = rs.getString("email");
+                String pass = rs.getString("pass");
 
-                System.out.print(", Ime: " + ime);
-                System.out.println(", Poštna št.: " + post_st);
+                System.out.println(mail + " " + pass);
 
-                return true;
+                if (mail == email && pass == geslo) //mail in pass zazna ista sam ne izpiše true
+                {
+
+                    return true;
+                }
             }
             conn.close();
         }
