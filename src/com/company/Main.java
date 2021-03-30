@@ -1,25 +1,26 @@
 package com.company;
-
 import java.sql.*;
-import java.util.Properties;
 
 public class Main {
-
     public static void main(String[] args) {
-        Database db = new Database();
-
+        //System.out.println("Hello world");
+        DatabaseConnection dc = new DatabaseConnection();
+        String z = "bla bla";
+        int u = 2000;
+        /*
         try {
-            db.Vnos("Skem", 9999);
+            dc.Save(z,u);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
         try {
-            db.Izpis();
+            dc.Izpis();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        */
 
-
+        new prijava();
     }
 }
