@@ -2,6 +2,7 @@ package com.company;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.awt.*;
 import java.sql.*;
 //import java.util.Properties;
 
@@ -17,9 +18,7 @@ public class DatabaseConnection {
             String jdbcURL = "jdbc:postgresql://ec2-52-213-167-210.eu-west-1.compute.amazonaws.com:5432/d72om3lphmskj1";
             String username = "agzigsarirffns";
             String password = "0bbb063c271cbf8b6ad1108669ae17fe0e978ab530c693b62fdc6b4debae87ca";
-            //Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(jdbcURL, username, password);
-
         }
         catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -90,4 +89,26 @@ public class DatabaseConnection {
         }
     }
 
+    public void Izpis_Objav(){
+
+        try(Connection connection = Connect()){
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trjanje,dm.prosta_mesta,k.ime,p.ime FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String Naziv = rs.getString("naziv");
+                String Opis = rs.getString("opis");
+                int Placa = rs.getInt("placa");
+                String Trajanje = rs.getString("trajanje");
+                int Plac = rs.getInt("prosta_mesta");
+                String Kraj = rs.getString("ime");
+                String Podjetje = rs.getString("naslov");
+
+            }
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
 }
