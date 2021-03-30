@@ -38,9 +38,15 @@ public class prijava {
 
                     //con.CheckUser(email, newPass);
 
-                    System.out.println(con.CheckUser(email, newPass));
-                    System.out.println(email + " " + newPass);
-
+                    boolean yes = con.CheckUser(email, newPass);
+                    if (yes == true) {
+                        System.out.println("Vpis uspel");
+                        //Odobri dostop na naslednji form
+                    }
+                    else
+                    {
+                        System.out.println("Vpis NI uspel");
+                    }
                     //con.CheckUser(email, newPass);
                 } catch (Exception e) {
                     e.printStackTrace();
