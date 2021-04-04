@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class prijava {
-    DatabaseConnection dc = new DatabaseConnection();
+    Database dc = new Database();
 
     private JButton Btn_SignIn;
     private JTextField textField1;

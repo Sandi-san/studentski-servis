@@ -4,9 +4,10 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.awt.*;
 import java.sql.*;
+import java.util.ArrayList;
 //import java.util.Properties;
 
-public class DatabaseConnection {
+public class Database {
     public static void main(String[] args) {
 
     }
@@ -89,11 +90,12 @@ public class DatabaseConnection {
         }
     }
 
-    public void Izpis_Objav(){
+    public ArrayList<String> Izpis_Objav(){
+        ArrayList <String> objave = new ArrayList<>();
 
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
-            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trjanje,dm.prosta_mesta,k.ime,p.ime FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
+            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje,dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
@@ -103,12 +105,13 @@ public class DatabaseConnection {
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
-
+                objave.add(Naziv + " " + Opis + " " + Placa + " " + Trajanje + " " + Plac + " " + Kraj + " " + Podjetje);
             }
             conn.close();
         }
         catch(SQLException e){
             e.printStackTrace();
         }
+        return objave;
     }
 }

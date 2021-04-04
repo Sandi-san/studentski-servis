@@ -9,4 +9,14 @@ public class registracija {
     private JTextField textField3;
     private JTextField textField4;
     private JButton Btn_SignUp;
+    private JPanel regPanel;
+
+    public registracija(){
+        JFrame jframe = new JFrame("Registracija");
+        jframe.setContentPane(regPanel);
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.pack();
+        jframe.setSize(1050, 400);
+        jframe.setVisible(true);
+    }
 }
