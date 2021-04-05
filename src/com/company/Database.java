@@ -5,6 +5,10 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 //import java.util.Properties;
 
 public class Database {
@@ -90,8 +94,8 @@ public class Database {
         }
     }
 
-    public ArrayList<String> Izpis_Objav(){
-        ArrayList <String> objave = new ArrayList<>();
+    public ArrayList<String> Return_Objave(){
+        ArrayList <String> objave =  new ArrayList<>();
 
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
@@ -105,7 +109,13 @@ public class Database {
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
-                objave.add(Naziv + " " + Opis + " " + Placa + " " + Trajanje + " " + Plac + " " + Kraj + " " + Podjetje);
+
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + Plac + "," + Kraj + "," + Podjetje);
+
+                /*da vsako v novo vrsto v vnasanju v tabelo
+                String vse = Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + Plac + "," + Kraj + "," + Podjetje;
+                Collections.addAll(objave, vse.split("\\s*,\\s*"));
+                objave = Stream.of(vse.split(",")).collect(Collectors.toCollection(ArrayList<String>::new));*/
             }
             conn.close();
         }
@@ -113,5 +123,22 @@ public class Database {
             e.printStackTrace();
         }
         return objave;
+    }
+
+    public ArrayList<String> Return_Kraje(){
+        ArrayList <String> kraji = new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT ime FROM kraji";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String ime = rs.getString("ime");
+                kraji.add(ime);
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return kraji;
     }
 }

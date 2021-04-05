@@ -2,15 +2,15 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Home {
     Database dc = new Database();
     private JPanel homePanel;
     private JButton Btn_Prijava;
     private JButton Btn_Registracija;
-    private JTable TablePosts;
+    private JTable postsTable;
+    private JScrollPane postsPane;
+    private JComboBox krajiCombo;
 
 
     public Home(){
@@ -21,40 +21,57 @@ public class Home {
         jframe.setSize(800, 500);
         jframe.setVisible(true);
 
-        Btn_Prijava.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                homePanel.setVisible(false);
-                jframe.setVisible(false);
-                new prijava();
-            }
+        dc.Return_Kraje().forEach((e) ->{
+            krajiCombo.addItem(e);
         });
 
-        Btn_Registracija.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                homePanel.setVisible(false);
-                jframe.setVisible(false);
-                new registracija();
-            }
+        setTable();
+
+        Btn_Prijava.addActionListener(actionEvent -> {
+            homePanel.setVisible(false);
+            jframe.setVisible(false);
+            new prijava();
         });
 
-        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Prosta mesta", "Kraj", "Podjetje"};
-        //TablePosts.setModel();
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(columns);
-        TablePosts.setModel(model);
-        TablePosts.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        dc.Izpis_Objav().forEach((e) ->{
-            Object[] data = {e};
-            JOptionPane.showMessageDialog(null, e);
+        Btn_Registracija.addActionListener(actionEvent -> {
+            homePanel.setVisible(false);
+            jframe.setVisible(false);
+            new registracija();
         });
-        //model.addRow(dc.Izpis_Objav());
-        //prikaž objave s tabelo(glavne informacija - prosta mesta, kratek opis, kontakt,..)
-        //dc.Izpis_Objav();
-
-
 
     }
+
+    private void setTable(){
+        //JOptionPane.showOptionDialog(null, data);
+        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Prosta mesta", "Kraj", "Podjetje"};
+
+        postsTable.setModel(new DefaultTableModel(
+                null,
+                columns
+        ));
+
+        DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
+
+        for(String line:dc.Return_Objave()){
+            model.addRow(line.split(","));
+        }
+        /*for(int i = 0; i < dc.Return_Objave().size(); i++){
+            String vse = dc.Return_Objave().get(i);
+            Object[] data = {vse};
+            model.addRow(data);
+        }*/
+
+
+        /*dc.Return_Objave().forEach((e) ->{
+            Object[] data = {e};
+            model.addRow(data);
+        });*/
+    }
+
+    /*public void AddRowToTable(Object[] data){
+        DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
+        //da vse v row pod Nazivom
+        model.addRow(data);
+    }*/
 
 }
