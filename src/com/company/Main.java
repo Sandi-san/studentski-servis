@@ -21,6 +21,7 @@ public class Main {
         }
         */
 
-        new prijava();
+        //new prijava();
+        new registracija();
     }
 }
