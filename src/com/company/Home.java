@@ -12,7 +12,6 @@ public class Home {
     private JScrollPane postsPane;
     private JComboBox krajiCombo;
 
-
     public Home(){
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
@@ -21,9 +20,7 @@ public class Home {
         jframe.setSize(800, 500);
         jframe.setVisible(true);
 
-        dc.Return_Kraje().forEach((e) ->{
-            krajiCombo.addItem(e);
-        });
+        dc.Return_Kraje().forEach((e) -> krajiCombo.addItem(e));
 
         setTable();
 
@@ -39,6 +36,14 @@ public class Home {
             new registracija();
         });
 
+        krajiCombo.addItemListener(itemEvent -> {
+            String ime = krajiCombo.getSelectedItem().toString();
+            DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
+            model.setRowCount(0);
+            for(String line:dc.Return_Kraj_Objava(ime)){
+                model.addRow(line.split(","));
+            }
+        });
     }
 
     private void setTable(){
@@ -55,23 +60,11 @@ public class Home {
         for(String line:dc.Return_Objave()){
             model.addRow(line.split(","));
         }
-        /*for(int i = 0; i < dc.Return_Objave().size(); i++){
-            String vse = dc.Return_Objave().get(i);
-            Object[] data = {vse};
-            model.addRow(data);
-        }*/
 
-
-        /*dc.Return_Objave().forEach((e) ->{
-            Object[] data = {e};
-            model.addRow(data);
-        });*/
     }
 
     /*public void AddRowToTable(Object[] data){
         DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
-        //da vse v row pod Nazivom
         model.addRow(data);
     }*/
-
 }
