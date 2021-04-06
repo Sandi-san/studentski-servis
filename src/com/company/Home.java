@@ -2,6 +2,8 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Home {
     Database dc = new Database();
@@ -11,6 +13,7 @@ public class Home {
     private JTable postsTable;
     private JScrollPane postsPane;
     private JComboBox krajiCombo;
+    private JButton Btn_AddPost;
 
     public Home(){
         JFrame jframe = new JFrame("Home");
@@ -43,6 +46,11 @@ public class Home {
             for(String line:dc.Return_Kraj_Objava(ime)){
                 model.addRow(line.split(","));
             }
+        });
+        Btn_AddPost.addActionListener(actionEvent -> {
+            homePanel.setVisible(false);
+            jframe.setVisible(false);
+            new dodajanjeObjav();
         });
     }
 

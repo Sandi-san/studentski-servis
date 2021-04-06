@@ -34,7 +34,7 @@ public class Database {
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
                 String Opis = rs.getString("opis");
-                int Placa = rs.getInt("placa");
+                String Placa = rs.getString("placa");
                 String Trajanje = rs.getString("trajanje");
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
@@ -76,7 +76,7 @@ public class Database {
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
                 String Opis = rs.getString("opis");
-                int Placa = rs.getInt("placa");
+                String Placa = rs.getString("placa");
                 String Trajanje = rs.getString("trajanje");
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
@@ -89,5 +89,17 @@ public class Database {
             e.printStackTrace();
         }
         return objave;
+    }
+
+    public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, String j){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "INSERT INTO delovna_mesta(naziv, opis, placa, trajanje, delovnik, sifra, prosta_mesta, kraj_id, podjetje_id, admin_id) VALUES()";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
     }
 }
