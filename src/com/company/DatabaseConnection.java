@@ -106,7 +106,7 @@ public class DatabaseConnection {
         }
     }
 
-    public void AdminSignIn(String mail, String passs) throws SQLException{
+    public void AdminReg(String mail, String passs) throws SQLException{
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
 
@@ -121,6 +121,8 @@ public class DatabaseConnection {
 
     public boolean CheckUser(String email, String geslo)
     {
+        boolean isTrue = false;
+
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
 
@@ -130,12 +132,15 @@ public class DatabaseConnection {
                 String mail = rs.getString("email");
                 String pass = rs.getString("pass");
 
-                System.out.println(mail + " " + pass);
+                //System.out.println("Iz baze: " + mail + " " + pass);
 
-                if (mail == email && pass == geslo) //mail in pass zazna ista sam ne izpiše true
+                if (mail.equals(email))
                 {
-
-                    return true;
+                    if (pass.equals(geslo))
+                    {
+                        //System.out.println("JE TRUE KURBA");
+                        isTrue = true;
+                    }
                 }
             }
             conn.close();
@@ -144,7 +149,7 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
 
-        return false;
+        return isTrue;
     }
 
 }
