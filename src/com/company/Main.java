@@ -3,6 +3,7 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) {
+        //testMerge
         //System.out.println("Hello world");
         DatabaseConnection dc = new DatabaseConnection();
         String z = "bla bla";
