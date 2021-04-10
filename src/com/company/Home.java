@@ -2,8 +2,6 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Home {
     Database dc = new Database();
@@ -14,6 +12,8 @@ public class Home {
     private JScrollPane postsPane;
     private JComboBox krajiCombo;
     private JButton Btn_AddPost;
+    private JButton brisanjeObjavButton;
+    private JButton posodabljanjeObjavButton;
 
     public Home(){
         JFrame jframe = new JFrame("Home");
@@ -56,7 +56,7 @@ public class Home {
 
     private void setTable(){
         //JOptionPane.showOptionDialog(null, data);
-        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Prosta mesta", "Kraj", "Podjetje"};
+        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Prosto", "Kraj", "Podjetje", "Naročanje"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
@@ -71,8 +71,8 @@ public class Home {
 
     }
 
-    /*public void AddRowToTable(Object[] data){
+    public void AddRowToTable(Object[] data){
         DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
         model.addRow(data);
-    }*/
+    }
 }

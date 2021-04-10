@@ -1,6 +1,7 @@
 package com.company;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,14 +20,20 @@ public class dodajanjeObjav {
     private JLabel pLbl;
     private JTextField textField5;
     private JTextField textField6;
+    private JButton nazajButton;
+    private JTextField textField7;
 
     public dodajanjeObjav(){
+        Database dc = new Database();
+        Home hom =  new Home();
         JFrame jframe = new JFrame("Insert");
         jframe.setContentPane(panel);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.pack();
         jframe.setSize(800, 500);
         jframe.setVisible(true);
+        dc.Return_Kraje().forEach((e) -> krajCombo.addItem(e));
+
 
         dodajButton.addActionListener(actionEvent -> {
             String naziv = textField2.getText();
@@ -37,8 +44,12 @@ public class dodajanjeObjav {
             String sifra = textField6.getText();
             int fraj = Integer.parseInt(textField4.getText());
             String kraj = krajCombo.getSelectedItem().toString();
-            String podjetje = podjetjeCombo.getSelectedItem().toString();
+            String podjetje = textField7.getText();
+            int admin = 1;
 
+            Database db = new Database();
+            db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, admin);
+            hom.AddRowToTable(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje});
             panel.setVisible(false);
             jframe.setVisible(false);
             new Home();
