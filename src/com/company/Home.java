@@ -2,6 +2,8 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Home {
     Database dc = new Database();
@@ -51,6 +53,9 @@ public class Home {
             homePanel.setVisible(false);
             jframe.setVisible(false);
             new dodajanjeObjav();
+        });
+        brisanjeObjavButton.addActionListener(actionEvent -> {
+
         });
     }
 
