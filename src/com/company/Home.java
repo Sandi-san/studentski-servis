@@ -1,11 +1,16 @@
 package com.company;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Home {
+    static int id_o;
     Database dc = new Database();
     private JPanel homePanel;
     private JButton Btn_Prijava;
@@ -29,6 +34,16 @@ public class Home {
 
         setTable();
 
+        /*int column = 0;
+        int row = postsTable.getSelectedRow();
+        String value = postsTable.getModel().getValueAt(row, column).toString();
+        System.out.println(value);*/
+
+        /*postsTable.getSelectionModel().addListSelectionListener(listSelectionEvent -> {
+            System.out.println(postsTable.getValueAt(postsTable.getSelectedRow(), 0).toString());
+        });*/
+
+        //JOptionPane.showOptionDialog(null, value);
         Btn_Prijava.addActionListener(actionEvent -> {
             homePanel.setVisible(false);
             jframe.setVisible(false);
@@ -49,13 +64,37 @@ public class Home {
                 model.addRow(line.split(","));
             }
         });
+
         Btn_AddPost.addActionListener(actionEvent -> {
             homePanel.setVisible(false);
             jframe.setVisible(false);
             new dodajanjeObjav();
         });
-        brisanjeObjavButton.addActionListener(actionEvent -> {
 
+        brisanjeObjavButton.addActionListener(actionEvent -> {
+            dc.Deletanje_Objav(id_o);
+        });
+
+        posodabljanjeObjavButton.addActionListener(actionEvent -> {
+
+        });
+;
+        postsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
+                int index = postsTable.getSelectedRow();
+                String naziv = model.getValueAt(index,0).toString();
+                String opis = model.getValueAt(index,1).toString();
+                String placa = model.getValueAt(index,2).toString();
+                String trajanje = model.getValueAt(index,3).toString();
+                int prosto = Integer.parseInt(model.getValueAt(index,4).toString());
+                String kraj = model.getValueAt(index,5).toString();
+                String podjetje = model.getValueAt(index,6).toString();
+
+                System.out.println(dc.Get_ID_Objave(naziv, opis, placa, trajanje, prosto, kraj, podjetje));
+                super.mouseClicked(mouseEvent);
+            }
         });
     }
 

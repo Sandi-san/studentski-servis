@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -100,6 +101,38 @@ public class Database {
         catch (SQLException e){
             e.printStackTrace();
         }
+    }
 
+    public int Get_ID_Objave(String a, String b, String c, String d, int h, String k, String p){
+        //ArrayList <int> objave =  new ArrayList<>();
+        int i = 1;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT dm.id FROM delovna_mesta dm INNER JOIN kraji k ON k.id = dm.kraj_id INNER JOIN podjetja p ON p.id = dm.podjetje_id WHERE(dm.naziv = '" + a +"') AND (dm.opis = '" + b + "') AND (dm.placa = '" + c +"') AND (dm.trajanje = '" + d + "') AND (dm.prosta_mesta = '" + h + "') AND (k.ime = '" + k +"') AND (p.naslov = '" + p + "') ";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int id = rs.getInt("id");
+                i = id;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    public void Updatanje_Objav(int id_o, String a, String b, String c, String d, String g, String z, int h, String k, String p){
+
+    }
+
+    public void Deletanje_Objav(int id_o){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "DELETE FROM objave WHERE id = '" + id_o + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 }

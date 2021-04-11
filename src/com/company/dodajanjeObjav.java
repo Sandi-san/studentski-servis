@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class dodajanjeObjav {
+    Database dc = new Database();
+    Home hom =  new Home();
     private JPanel panel;
     private JTextField textField2;
     private JTextArea textArea1;
@@ -24,8 +26,6 @@ public class dodajanjeObjav {
     private JTextField textField7;
 
     public dodajanjeObjav(){
-        Database dc = new Database();
-        Home hom =  new Home();
         JFrame jframe = new JFrame("Insert");
         jframe.setContentPane(panel);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +33,6 @@ public class dodajanjeObjav {
         jframe.setSize(800, 500);
         jframe.setVisible(true);
         dc.Return_Kraje().forEach((e) -> krajCombo.addItem(e));
-
 
         dodajButton.addActionListener(actionEvent -> {
             String naziv = textField2.getText();
@@ -50,6 +49,12 @@ public class dodajanjeObjav {
             Database db = new Database();
             db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, admin);
             hom.AddRowToTable(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje});
+            panel.setVisible(false);
+            jframe.setVisible(false);
+            new Home();
+        });
+
+        nazajButton.addActionListener(actionEvent -> {
             panel.setVisible(false);
             jframe.setVisible(false);
             new Home();
