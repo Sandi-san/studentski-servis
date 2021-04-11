@@ -21,6 +21,15 @@ public class Home {
     private JButton Btn_AddPost;
     private JButton brisanjeObjavButton;
     private JButton posodabljanjeObjavButton;
+    private JTextField textField1;
+    private JTextArea textArea1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JTextField textField5;
+    private JTextField textField6;
+    private JComboBox krajCombo;
+    private JComboBox podjetjeCombo;
 
     public Home(){
         JFrame jframe = new JFrame("Home");
@@ -31,19 +40,11 @@ public class Home {
         jframe.setVisible(true);
 
         dc.Return_Kraje().forEach((e) -> krajiCombo.addItem(e));
+        dc.Return_Kraje().forEach((e) -> krajCombo.addItem(e));
+        dc.Return_Podjetja().forEach((e) -> podjetjeCombo.addItem(e));
 
         setTable();
 
-        /*int column = 0;
-        int row = postsTable.getSelectedRow();
-        String value = postsTable.getModel().getValueAt(row, column).toString();
-        System.out.println(value);*/
-
-        /*postsTable.getSelectionModel().addListSelectionListener(listSelectionEvent -> {
-            System.out.println(postsTable.getValueAt(postsTable.getSelectedRow(), 0).toString());
-        });*/
-
-        //JOptionPane.showOptionDialog(null, value);
         Btn_Prijava.addActionListener(actionEvent -> {
             homePanel.setVisible(false);
             jframe.setVisible(false);
@@ -66,41 +67,113 @@ public class Home {
         });
 
         Btn_AddPost.addActionListener(actionEvent -> {
-            homePanel.setVisible(false);
-            jframe.setVisible(false);
-            new dodajanjeObjav();
+            String naziv = textField1.getText();
+            String desc = textArea1.getText();
+            String placa = textField2.getText();
+            String trajanje = textField3.getText();
+            String d = textField4.getText();
+            String sifra = textField5.getText();
+            int fraj = Integer.parseInt(textField6.getText());
+            String kraj = krajCombo.getSelectedItem().toString();
+            String podjetje = podjetjeCombo.getSelectedItem().toString();
+            int admin = 1;
+
+            Database db = new Database();
+            db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, admin);
+            AddRowToTable(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje});
+
+            textArea1.setText("");
+            textField1.setText("");
+            textField2.setText("");
+            textField3.setText("");
+            textField4.setText("");
+            textField5.setText("");
+            textField6.setText("");
         });
 
         brisanjeObjavButton.addActionListener(actionEvent -> {
             dc.Deletanje_Objav(id_o);
+
+            DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
+            int index = postsTable.getSelectedRow();
+            model.removeRow(index);
         });
 
         posodabljanjeObjavButton.addActionListener(actionEvent -> {
+            DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
+            if(postsTable.getSelectedRowCount() == 1){
+                String naziv = textField1.getText();
+                String desc = textArea1.getText();
+                String placa = textField2.getText();
+                String trajanje = textField3.getText();
+                String d = textField4.getText();
+                String sifra = textField5.getText();
+                int fraj = Integer.parseInt(textField6.getText());
+                String kraj = krajCombo.getSelectedItem().toString();
+                String podjetje = podjetjeCombo.getSelectedItem().toString();
 
+                dc.Updatanje_Objav(id_o, naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje);
+
+                model.setValueAt(naziv,postsTable.getSelectedRow(), 0);
+                model.setValueAt(desc,postsTable.getSelectedRow(), 1);
+                model.setValueAt(placa,postsTable.getSelectedRow(), 2);
+                model.setValueAt(trajanje,postsTable.getSelectedRow(), 3);
+                model.setValueAt(d,postsTable.getSelectedRow(), 4);
+                model.setValueAt(sifra,postsTable.getSelectedRow(), 5);
+                model.setValueAt(fraj,postsTable.getSelectedRow(), 6);
+                model.setValueAt(kraj,postsTable.getSelectedRow(), 7);
+                model.setValueAt(podjetje,postsTable.getSelectedRow(), 8);
+
+                textArea1.setText("");
+                textField1.setText("");
+                textField2.setText("");
+                textField3.setText("");
+                textField4.setText("");
+                textField5.setText("");
+                textField6.setText("");
+                postsTable.getSelectionModel().clearSelection();
+            }
         });
-;
+
         postsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
+                brisanjeObjavButton.setEnabled(true);
+                posodabljanjeObjavButton.setEnabled(true);
+
                 DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
                 int index = postsTable.getSelectedRow();
+
+                textField1.setText(model.getValueAt(index,0).toString());
+                textArea1.setText(model.getValueAt(index,1).toString());
+                textField2.setText(model.getValueAt(index,2).toString());
+                textField3.setText(model.getValueAt(index,3).toString());
+                textField4.setText(model.getValueAt(index,4).toString());
+                textField5.setText(model.getValueAt(index,5).toString());
+                textField6.setText(model.getValueAt(index,6).toString());
+                krajCombo.setSelectedItem(model.getValueAt(index,7).toString());
+                podjetjeCombo.setSelectedItem(model.getValueAt(index,8).toString());
+
                 String naziv = model.getValueAt(index,0).toString();
                 String opis = model.getValueAt(index,1).toString();
                 String placa = model.getValueAt(index,2).toString();
                 String trajanje = model.getValueAt(index,3).toString();
-                int prosto = Integer.parseInt(model.getValueAt(index,4).toString());
-                String kraj = model.getValueAt(index,5).toString();
-                String podjetje = model.getValueAt(index,6).toString();
+                String delovnik = model.getValueAt(index,4).toString();
+                String sifra = model.getValueAt(index,5).toString();
+                int prosto = Integer.parseInt(textField6.getText());
+                String kraj = model.getValueAt(index,7).toString();
+                String podjetje = model.getValueAt(index,8).toString();
 
-                System.out.println(dc.Get_ID_Objave(naziv, opis, placa, trajanje, prosto, kraj, podjetje));
-                super.mouseClicked(mouseEvent);
+                id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
+                System.out.println(id_o);
+                //JOptionPane.showMessageDialog(this, data);
+                //super.mouseClicked(mouseEvent);
             }
         });
     }
 
     private void setTable(){
-        //JOptionPane.showOptionDialog(null, data);
-        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Prosto", "Kraj", "Podjetje", "Naročanje"};
+        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
@@ -108,11 +181,9 @@ public class Home {
         ));
 
         DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
-
         for(String line:dc.Return_Objave()){
             model.addRow(line.split(","));
         }
-
     }
 
     public void AddRowToTable(Object[] data){

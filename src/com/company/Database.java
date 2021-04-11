@@ -30,18 +30,20 @@ public class Database {
 
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje,dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
+            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje,dm.delovnik, dm.sifra, dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
                 String Opis = rs.getString("opis");
                 String Placa = rs.getString("placa");
                 String Trajanje = rs.getString("trajanje");
+                String e = rs.getString("delovnik");
+                String g = rs.getString("sifra");
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + Plac + "," + Kraj + "," + Podjetje);
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + e + "," + g + "," + Plac + "," + Kraj + "," + Podjetje);
             }
         }
         catch(SQLException e){
@@ -67,23 +69,41 @@ public class Database {
         return kraji;
     }
 
+    public ArrayList<String> Return_Podjetja(){
+        ArrayList <String> podjetja = new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT naslov FROM podjetja";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String ime = rs.getString("naslov");
+                podjetja.add(ime);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return podjetja;
+    }
     public ArrayList<String> Return_Kraj_Objava(String kraj){
         ArrayList <String> objave =  new ArrayList<>();
 
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje,dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id WHERE (k.ime = '" + kraj + "') ";
+            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje, dm.delovnik, dm.sifra,dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id WHERE (k.ime = '" + kraj + "') ";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
                 String Opis = rs.getString("opis");
                 String Placa = rs.getString("placa");
                 String Trajanje = rs.getString("trajanje");
+                String d = rs.getString("delovnik");
+                String s = rs.getString("sifra");
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + Plac + "," + Kraj + "," + Podjetje);
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + d + "," + s + "," + Plac + "," + Kraj + "," + Podjetje);
             }
         }
         catch (SQLException e){
@@ -103,12 +123,12 @@ public class Database {
         }
     }
 
-    public int Get_ID_Objave(String a, String b, String c, String d, int h, String k, String p){
+    public int Get_ID_Objave(String a, String b, String c, String d, String l, String f, int h, String k, String p){
         //ArrayList <int> objave =  new ArrayList<>();
         int i = 1;
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT dm.id FROM delovna_mesta dm INNER JOIN kraji k ON k.id = dm.kraj_id INNER JOIN podjetja p ON p.id = dm.podjetje_id WHERE(dm.naziv = '" + a +"') AND (dm.opis = '" + b + "') AND (dm.placa = '" + c +"') AND (dm.trajanje = '" + d + "') AND (dm.prosta_mesta = '" + h + "') AND (k.ime = '" + k +"') AND (p.naslov = '" + p + "') ";
+            String sql = "SELECT dm.id FROM delovna_mesta dm INNER JOIN kraji k ON k.id = dm.kraj_id INNER JOIN podjetja p ON p.id = dm.podjetje_id WHERE(dm.naziv = '" + a +"') AND (dm.opis = '" + b + "') AND (dm.placa = '" + c +"') AND (dm.trajanje = '" + d + "') AND (dm.delovnik = '" + l +"') AND (dm.sifra = '" + f +"') AND (dm.prosta_mesta = '" + h + "') AND (k.ime = '" + k +"') AND (p.naslov = '" + p + "') ";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 int id = rs.getInt("id");
@@ -121,14 +141,21 @@ public class Database {
         return i;
     }
 
-    public void Updatanje_Objav(int id_o, String a, String b, String c, String d, String g, String z, int h, String k, String p){
-
+    public void Updatanje_Objav(int id_o, String a, String b, String c, String d, String r, String f, int h, String k, String p){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE delovna_mesta SET naziv = '" + a + "', opis = '" + b + "', placa = '" + c + "', trajanje = '" + d + "', prosta_mesta = '" + h + "', delovnik = '" + r + "', sifra = '" + f + "', kraj_id = (SELECT id FROM kraji WHERE ime = '" + k + "'), podjetje_id = (SELECT id FROM podjetja WHERE naslov = '" + p +"') WHERE (id = '" + id_o +"') ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public void Deletanje_Objav(int id_o){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "DELETE FROM objave WHERE id = '" + id_o + "' ";
+            String sql = "DELETE FROM delovna_mesta WHERE id = '" + id_o + "' ";
             stmt.executeUpdate(sql);
         }
         catch(SQLException e){
