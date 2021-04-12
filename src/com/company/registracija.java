@@ -25,31 +25,28 @@ public class registracija {
         mainTitle.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         //textField1.setPreferredSize(new Dimension(10,5));
 
-        Btn_SignUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String email = textField1.getText();
-                char[] geslo = passwordField1.getPassword();
-                //JOptionPane.showMessageDialog(null, "Hello world");
+        Btn_SignUp.addActionListener(actionEvent -> {
+            String email = textField1.getText();
+            char[] geslo = passwordField1.getPassword();
+            //JOptionPane.showMessageDialog(null, "Hello world");
 
-                DatabaseConnection con = new DatabaseConnection();
+            DatabaseConnection con = new DatabaseConnection();
 
-                try {
-                    String newPass = con.Encrypt(String.valueOf(geslo));
+            try {
+                String newPass = con.Encrypt(String.valueOf(geslo));
 
-                    //con.CheckUser(email, newPass);
+                //con.CheckUser(email, newPass);
 
-                    con.AdminReg(email, newPass);
-                    JOptionPane.showMessageDialog(null, "Dodaja uspešna");
+                con.AdminReg(email, newPass);
+                JOptionPane.showMessageDialog(null, "Dodaja uspešna");
 
-                    //Odobri dostop na naslednji form
-                    //new Home();
-                    panel1.setEnabled(false);
-                    jframe.dispose();
+                //Odobri dostop na naslednji form
+                //new Home();
+                panel1.setEnabled(false);
+                jframe.dispose();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

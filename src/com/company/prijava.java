@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class prijava {
-    DatabaseConnection dc = new DatabaseConnection();
-
     private JButton Btn_SignIn;
     private JTextField textField1;
     private JPanel panel1;
@@ -23,40 +21,31 @@ public class prijava {
         jframe.setResizable(false);
         jframe.setVisible(true);
         maintitle.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        //textField1.setPreferredSize(new Dimension(10,5));
 
-        Btn_SignIn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String email = textField1.getText();
-                char[] geslo = passwordField1.getPassword();
-                //JOptionPane.showMessageDialog(null, "Hello world");
+        Btn_SignIn.addActionListener(actionEvent -> {
+            String email = textField1.getText();
+            char[] geslo = passwordField1.getPassword();
+            //JOptionPane.showMessageDialog(null, "Hello world");
 
-                DatabaseConnection con = new DatabaseConnection();
+            DatabaseConnection con = new DatabaseConnection();
 
-                try {
-                    String newPass = con.Encrypt(String.valueOf(geslo));
-
-                    //con.CheckUser(email, newPass);
-
-                    boolean yes = con.CheckUser(email, newPass);
-                    if (yes == true) {
-                        //System.out.println("Vpis uspel");
-                        JOptionPane.showMessageDialog(null, "Vpis uspešen");
-                        //Odobri dostop na naslednji form
-                        //new Home();
-                        panel1.setEnabled(false);
-                        jframe.dispose();
-                    }
-                    else
-                    {
-                        //System.out.println("Vpis NI uspel");
-                        JOptionPane.showMessageDialog(null, "Vpis NI uspel");
-                    }
-                    //con.CheckUser(email, newPass);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                String newPass = con.Encrypt(String.valueOf(geslo));
+                boolean yes = con.CheckUser(email, newPass);
+                if (yes == true) {
+                    JOptionPane.showMessageDialog(null, "Vpis uspešen");
+                    Home.DobMail(email);
+                    new Home();
+                    panel1.setEnabled(false);
+                    jframe.dispose();
                 }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Vpis NI uspel");
+                }
+                //con.CheckUser(email, newPass);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
