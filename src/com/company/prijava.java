@@ -37,14 +37,11 @@ public class prijava {
                 try {
                     String newPass = con.Encrypt(String.valueOf(geslo));
 
-                    //con.CheckUser(email, newPass);
-
                     boolean yes = con.CheckUser(email, newPass);
                     if (yes == true) {
-                        //System.out.println("Vpis uspel");
                         JOptionPane.showMessageDialog(null, "Vpis uspešen");
-                        //Odobri dostop na naslednji form
-                        //new Home();
+
+                        new Home();
                         panel1.setEnabled(false);
                         jframe.dispose();
                     }

@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 
 public class Home {
     static int id_o;
-    DatabaseConncetion dc = new Database();
+    DatabaseConnection dc = new DatabaseConnection();
     private JPanel homePanel;
     private JButton Btn_Prijava;
     private JButton Btn_Registracija;
@@ -78,7 +78,7 @@ public class Home {
             String podjetje = podjetjeCombo.getSelectedItem().toString();
             int admin = 1;
 
-            DatabaseConnection db = new Database();
+            DatabaseConnection db = new DatabaseConnection();
             db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, admin);
             AddRowToTable(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje});
 
@@ -166,8 +166,7 @@ public class Home {
 
                 id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
                 System.out.println(id_o);
-                //JOptionPane.showMessageDialog(this, data);
-                //super.mouseClicked(mouseEvent);
+
             }
         });
     }
