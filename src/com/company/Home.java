@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Home {
+    static String mail_admina;
     static int id_o;
     DatabaseConnection dc = new DatabaseConnection();
     private JPanel homePanel;
@@ -31,6 +32,10 @@ public class Home {
     private JComboBox krajCombo;
     private JComboBox podjetjeCombo;
 
+    public static void DobMail(String ab){
+        mail_admina = ab;
+    }
+
     public Home(){
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
@@ -45,6 +50,7 @@ public class Home {
 
         setTable();
 
+        //JOptionPane.showMessageDialog(null, mail_admina);
         Btn_Prijava.addActionListener(actionEvent -> {
             homePanel.setVisible(false);
             jframe.setVisible(false);
@@ -76,10 +82,10 @@ public class Home {
             int fraj = Integer.parseInt(textField6.getText());
             String kraj = krajCombo.getSelectedItem().toString();
             String podjetje = podjetjeCombo.getSelectedItem().toString();
-            int admin = 1;
+            String name = mail_admina;
 
             DatabaseConnection db = new DatabaseConnection();
-            db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, admin);
+            db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name);
             AddRowToTable(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje});
 
             textArea1.setText("");
@@ -93,6 +99,14 @@ public class Home {
 
         brisanjeObjavButton.addActionListener(actionEvent -> {
             dc.Deletanje_Objav(id_o);
+
+            textArea1.setText("");
+            textField1.setText("");
+            textField2.setText("");
+            textField3.setText("");
+            textField4.setText("");
+            textField5.setText("");
+            textField6.setText("");
 
             DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
             int index = postsTable.getSelectedRow();

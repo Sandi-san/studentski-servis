@@ -234,10 +234,10 @@ public class DatabaseConnection {
         return objave;
     }
 
-    public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, int j){
+    public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, String j){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "INSERT INTO delovna_mesta(naziv, opis, placa, trajanje, delovnik, sifra, prosta_mesta, kraj_id, podjetje_id, admin_id) VALUES('" + a + "', '" + b + "', '" + c + "', '" + d + "', '" + g +"', '" + z + "', '" + h +"', (SELECT id FROM kraji WHERE ime = '" + k +"') , (SELECT id FROM podjetja WHERE naslov = '" + p + "'), '" + j + "')";
+            String sql = "INSERT INTO delovna_mesta(naziv, opis, placa, trajanje, delovnik, sifra, prosta_mesta, kraj_id, podjetje_id, admin_id) VALUES('" + a + "', '" + b + "', '" + c + "', '" + d + "', '" + g +"', '" + z + "', '" + h +"', (SELECT id FROM kraji WHERE ime = '" + k +"') , (SELECT id FROM podjetja WHERE naslov = '" + p + "'), (SELECT id FROM admini WHERE email = '" + j + "') )";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
