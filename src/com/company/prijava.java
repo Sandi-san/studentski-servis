@@ -10,25 +10,53 @@ public class prijava {
 
     private JButton Btn_SignIn;
     private JTextField textField1;
-    private JTextField textField2;
     private JPanel panel1;
+    private JPasswordField passwordField1;
+    private JLabel maintitle;
 
     public prijava() {
         JFrame jframe = new JFrame("Prijava");
         jframe.setContentPane(panel1);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.pack();
-        jframe.setSize(1050, 400);
+        jframe.setSize(600, 400);
+        jframe.setResizable(false);
         jframe.setVisible(true);
-
-
+        maintitle.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        //textField1.setPreferredSize(new Dimension(10,5));
 
         Btn_SignIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String email = textField1.getText();
-                String geslo = textField2.getText();
-                JOptionPane.showMessageDialog(null, "Hello world");
+                char[] geslo = passwordField1.getPassword();
+                //JOptionPane.showMessageDialog(null, "Hello world");
+
+                DatabaseConnection con = new DatabaseConnection();
+
+                try {
+                    String newPass = con.Encrypt(String.valueOf(geslo));
+
+                    //con.CheckUser(email, newPass);
+
+                    boolean yes = con.CheckUser(email, newPass);
+                    if (yes == true) {
+                        //System.out.println("Vpis uspel");
+                        JOptionPane.showMessageDialog(null, "Vpis uspešen");
+                        //Odobri dostop na naslednji form
+                        //new Home();
+                        panel1.setEnabled(false);
+                        jframe.dispose();
+                    }
+                    else
+                    {
+                        //System.out.println("Vpis NI uspel");
+                        JOptionPane.showMessageDialog(null, "Vpis NI uspel");
+                    }
+                    //con.CheckUser(email, newPass);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
