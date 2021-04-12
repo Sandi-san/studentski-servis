@@ -1,12 +1,43 @@
 package com.company;
-
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-//import java.util.Properties;
+import java.util.Properties;
 
 public class DatabaseConnection {
     public static void main(String[] args) {
 
     }
+
+    public  static  String Encrypt(String passwordToHash)
+    {
+        String generatedPassword = null;
+        try {
+            // Create MessageDigest instance for MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            //Add password bytes to digest
+            md.update(passwordToHash.getBytes());
+            //Get the hash's bytes
+            byte[] bytes = md.digest();
+            //This bytes[] has bytes in decimal format;
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            //Get complete hashed password in hex format
+            generatedPassword = sb.toString();
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
+
 
     private Connection conn;
 
@@ -75,11 +106,11 @@ public class DatabaseConnection {
         }
     }
 
-    public void AdminSignIn(String mail, String passs) throws SQLException{
+    public void AdminReg(String mail, String passs) throws SQLException{
         try(Connection connection = Connect()){
             Statement stmt = conn.createStatement();
 
-            String sql = "INSERT INTO admini(username, pass) VALUES ('" + mail + "', '" + passs + "')";
+            String sql = "INSERT INTO admini(email, pass) VALUES ('" + mail + "', '" + passs + "')";
             stmt.executeUpdate(sql);
             conn.close();
         }
@@ -88,4 +119,64 @@ public class DatabaseConnection {
         }
     }
 
+    public boolean CheckUser(String email, String geslo)
+    {
+        boolean isTrue = false;
+
+        try(Connection connection = Connect()){
+            Statement stmt = conn.createStatement();
+
+            String sql = "SELECT email, pass FROM admini;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                String mail = rs.getString("email");
+                String pass = rs.getString("pass");
+
+                //System.out.println("Iz baze: " + mail + " " + pass);
+
+                if (mail.equals(email))
+                {
+                    if (pass.equals(geslo))
+                    {
+                        //System.out.println("JE TRUE KURBA");
+                        isTrue = true;
+                    }
+                }
+            }
+            conn.close();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return isTrue;
+    }
+
 }
+
+/*using (con)
+            {
+                con.Open();
+                using (SQLiteCommand com = new SQLiteCommand(con))
+                {
+                    com.CommandText = "SELECT ime, geslo FROM admins;";
+                    com.ExecuteNonQuery();
+                    SQLiteDataReader listAll = com.ExecuteReader();
+                    while (listAll.Read())
+                    {
+                        string ime = listAll.GetString(0);
+                        string pass = listAll.GetString(1);
+                        if (String.Equals(Apass, pass) && String.Equals(Aime, ime))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    listAll.Close();
+                    com.Dispose();
+                }
+                con.Close();
+                return false;*/
