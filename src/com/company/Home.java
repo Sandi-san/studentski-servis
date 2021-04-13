@@ -1,14 +1,20 @@
 package com.company;
 
+import javafx.stage.FileChooser;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 
 public class Home {
     static String mail_admina;
@@ -33,7 +39,9 @@ public class Home {
     private JComboBox krajCombo;
     private JComboBox podjetjeCombo;
     private JButton dodajSlikoButton;
-
+    private JLabel slika;
+    private JLabel slika2;
+    private JLabel display;
 
     public static void DobMail(String ab){
         mail_admina = ab;
@@ -53,7 +61,8 @@ public class Home {
         dc.Return_Podjetja().forEach((e) -> podjetjeCombo.addItem(e));
 
         setTable();
-
+        slika2.setVisible(false);
+        display.setVisible(false);
         //JOptionPane.showMessageDialog(null, mail_admina);
         Btn_Prijava.addActionListener(actionEvent -> {
             //homePanel.setVisible(false);
@@ -187,25 +196,44 @@ public class Home {
         });
 
         dodajSlikoButton.addActionListener(actionEvent -> {
-            JFrame fr = new JFrame("Image loading program Using awt");
-            FileDialog fd = new FileDialog(fr, "Open", FileDialog.LOAD);
+            /*JFileChooser fc = new JFileChooser("C:\\");
+            fc.setFileFilter(new FileNameExtensionFilter("Slikovne datoteke (*.jpg, *.png)", "jpg", "png"));
+            int returnVal = fc.showOpenDialog(FileChooserDemo.this);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                System.out.println("You chose to open this file: " +
+                        fc.getSelectedFile().getName());
+            }*/
+
+            JFrame fr = new JFrame("Open file");
+            FileDialog fd = new FileDialog(fr, "Naloži sliko", FileDialog.LOAD);
+
             fd.setDirectory("C:\\");
             //fd.setFilenameFilter();
             fd.setFile("*.jpg");
+            //fd.setFilenameFilter((File dir, String name) -> name.endsWith(".jpg"));
             fd.setVisible(true);
             String filename = fd.getFile();
             if (filename == null)
                 System.out.println("You cancelled the choice");
             else{
+                String path = fd.getDirectory() + fd.getFile();
+                File f = new File(path);
+                //System.out.println(f);
                 dodajSlikoButton.setVisible(false);
-                System.out.println("You chose " + filename);
+                //ImageIcon ii = filename
+                slika2.setVisible(true);
+                slika.setVisible(false);
+                dodajSlikoButton.setVisible(false);
+                //display = new JLabel(filename);
+                display.setVisible(true);
+                //System.out.println("You chose " + filename);
             }
-
+            fd.dispose();
         });
     }
 
     private void setTable(){
-        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
+        String[] columns = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Slika", "Naročanje"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
