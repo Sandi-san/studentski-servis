@@ -218,15 +218,14 @@ public class Home {
             else{
                 String path = fd.getDirectory() + fd.getFile();
                 File f = new File(path);
-                //System.out.println(f);
+                ImageIcon ic = new ImageIcon(f.toString());
+                //display.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+                display.setIcon(ic);
                 dodajSlikoButton.setVisible(false);
-                //ImageIcon ii = filename
                 slika2.setVisible(true);
                 slika.setVisible(false);
                 dodajSlikoButton.setVisible(false);
-                //display = new JLabel(filename);
                 display.setVisible(true);
-                //System.out.println("You chose " + filename);
             }
             fd.dispose();
         });
