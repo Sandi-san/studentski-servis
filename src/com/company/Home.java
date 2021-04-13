@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,12 +32,15 @@ public class Home {
     private JTextField textField6;
     private JComboBox krajCombo;
     private JComboBox podjetjeCombo;
+    private JButton dodajSlikoButton;
+
 
     public static void DobMail(String ab){
         mail_admina = ab;
     }
 
     public Home(){
+
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,14 +56,14 @@ public class Home {
 
         //JOptionPane.showMessageDialog(null, mail_admina);
         Btn_Prijava.addActionListener(actionEvent -> {
-            homePanel.setVisible(false);
-            jframe.setVisible(false);
+            //homePanel.setVisible(false);
+            jframe.dispose();
             new prijava();
         });
 
         Btn_Registracija.addActionListener(actionEvent -> {
-            homePanel.setVisible(false);
-            jframe.setVisible(false);
+            //homePanel.setVisible(false);
+            jframe.dispose();;
             new registracija();
         });
 
@@ -179,9 +183,24 @@ public class Home {
                 String podjetje = model.getValueAt(index,8).toString();
 
                 id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
-                System.out.println(id_o);
-
             }
+        });
+
+        dodajSlikoButton.addActionListener(actionEvent -> {
+            JFrame fr = new JFrame("Image loading program Using awt");
+            FileDialog fd = new FileDialog(fr, "Open", FileDialog.LOAD);
+            fd.setDirectory("C:\\");
+            //fd.setFilenameFilter();
+            fd.setFile("*.jpg");
+            fd.setVisible(true);
+            String filename = fd.getFile();
+            if (filename == null)
+                System.out.println("You cancelled the choice");
+            else{
+                dodajSlikoButton.setVisible(false);
+                System.out.println("You chose " + filename);
+            }
+
         });
     }
 
