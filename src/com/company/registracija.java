@@ -40,10 +40,9 @@ public class registracija {
                 con.AdminReg(email, newPass);
                 JOptionPane.showMessageDialog(null, "Dodaja uspešna");
 
-                //Odobri dostop na naslednji form
-                //new Home();
                 panel1.setEnabled(false);
                 jframe.dispose();
+                new Home();
 
             } catch (Exception e) {
                 e.printStackTrace();
