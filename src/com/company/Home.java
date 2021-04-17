@@ -44,6 +44,8 @@ public class Home {
     private JLabel display;
     private JButton signOutButton;
     private JButton Btn_Reg;
+    private JLabel title;
+    private JTabbedPane JTabPane1;
 
     public static void DobMail(String ab){
         mail_admina = ab;
