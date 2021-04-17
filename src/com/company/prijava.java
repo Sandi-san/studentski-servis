@@ -25,7 +25,6 @@ public class prijava {
         Btn_SignIn.addActionListener(actionEvent -> {
             String email = textField1.getText();
             char[] geslo = passwordField1.getPassword();
-            //JOptionPane.showMessageDialog(null, "Hello world");
 
             DatabaseConnection con = new DatabaseConnection();
 
@@ -33,7 +32,6 @@ public class prijava {
                 String newPass = con.Encrypt(String.valueOf(geslo));
                 boolean yes = con.CheckUser(email, newPass);
                 if (yes == true) {
-                    JOptionPane.showMessageDialog(null, "Vpis uspešen");
                     Home.DobMail(email);
                     new Home();
                     panel1.setEnabled(false);
@@ -43,7 +41,7 @@ public class prijava {
                 {
                     JOptionPane.showMessageDialog(null, "Vpis NI uspel");
                 }
-                //con.CheckUser(email, newPass);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

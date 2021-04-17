@@ -1,7 +1,5 @@
 package com.company;
 
-import javafx.stage.FileChooser;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -12,17 +10,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class Home {
+    ImageIcon ic = null;
     static String mail_admina;
     static int id_o;
     DatabaseConnection dc = new DatabaseConnection();
     private JPanel homePanel;
     private JButton Btn_Prijava;
-    private JButton Btn_Registracija;
     private JTable postsTable;
     private JScrollPane postsPane;
     private JComboBox krajiCombo;
@@ -42,39 +42,37 @@ public class Home {
     private JLabel slika;
     private JLabel slika2;
     private JLabel display;
+    private JButton signOutButton;
+    private JButton Btn_Reg;
+    private JLabel title;
+    private JTabbedPane JTabPane1;
 
     public static void DobMail(String ab){
         mail_admina = ab;
     }
 
     public Home(){
-
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.pack();
-        jframe.setSize(800, 500);
+        jframe.setSize(1000, 700);
         jframe.setVisible(true);
 
         dc.Return_Kraje().forEach((e) -> krajiCombo.addItem(e));
         dc.Return_Kraje().forEach((e) -> krajCombo.addItem(e));
         dc.Return_Podjetja().forEach((e) -> podjetjeCombo.addItem(e));
 
+        if(mail_admina == null)
+            signOutButton.setVisible(false);
+        else
+        {
+            Btn_Prijava.setVisible(false);
+            Btn_Reg.setVisible(false);
+        }
         setTable();
         slika2.setVisible(false);
         display.setVisible(false);
-        //JOptionPane.showMessageDialog(null, mail_admina);
-        Btn_Prijava.addActionListener(actionEvent -> {
-            //homePanel.setVisible(false);
-            jframe.dispose();
-            new prijava();
-        });
-
-        Btn_Registracija.addActionListener(actionEvent -> {
-            //homePanel.setVisible(false);
-            jframe.dispose();;
-            new registracija();
-        });
 
         krajiCombo.addItemListener(itemEvent -> {
             String ime = krajiCombo.getSelectedItem().toString();
@@ -196,20 +194,12 @@ public class Home {
         });
 
         dodajSlikoButton.addActionListener(actionEvent -> {
-            /*JFileChooser fc = new JFileChooser("C:\\");
-            fc.setFileFilter(new FileNameExtensionFilter("Slikovne datoteke (*.jpg, *.png)", "jpg", "png"));
-            int returnVal = fc.showOpenDialog(FileChooserDemo.this);
-            if(returnVal == JFileChooser.APPROVE_OPTION) {
-                System.out.println("You chose to open this file: " +
-                        fc.getSelectedFile().getName());
-            }*/
-
             JFrame fr = new JFrame("Open file");
             FileDialog fd = new FileDialog(fr, "Naloži sliko", FileDialog.LOAD);
 
             fd.setDirectory("C:\\");
             //fd.setFilenameFilter();
-            fd.setFile("*.jpg");
+            fd.setFile("*.jpg;*.png");
             //fd.setFilenameFilter((File dir, String name) -> name.endsWith(".jpg"));
             fd.setVisible(true);
             String filename = fd.getFile();
@@ -218,8 +208,10 @@ public class Home {
             else{
                 String path = fd.getDirectory() + fd.getFile();
                 File f = new File(path);
-                ImageIcon ic = new ImageIcon(f.toString());
-                //display.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+                ic = new ImageIcon(f.toString());
+                Image image = ic.getImage(); // transform it
+                Image newimg = image.getScaledInstance(290, 220,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+                ic = new ImageIcon(newimg);
                 display.setIcon(ic);
                 dodajSlikoButton.setVisible(false);
                 slika2.setVisible(true);
@@ -227,7 +219,23 @@ public class Home {
                 dodajSlikoButton.setVisible(false);
                 display.setVisible(true);
             }
-            fd.dispose();
+        });
+        signOutButton.addActionListener(actionEvent -> {
+            mail_admina = null;
+            Btn_Prijava.setVisible(false);
+            Btn_Reg.setVisible(false);
+        });
+
+        Btn_Reg.addActionListener(actionEvent -> {
+            //homePanel.setVisible(false);
+            jframe.dispose();;
+            new registracija();
+        });
+
+        Btn_Prijava.addActionListener(actionEvent -> {
+            //homePanel.setVisible(false);
+            jframe.dispose();
+            new prijava();
         });
     }
 
