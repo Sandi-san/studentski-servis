@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="homePanel" layout-manager="GridLayoutManager" row-count="15" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="657" height="570"/>
+      <xy x="20" y="20" width="677" height="570"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -94,39 +94,11 @@
           <text value="Posodabljanje objav"/>
         </properties>
       </component>
-      <component id="33432" class="javax.swing.JButton" binding="brisanjeObjavButton" default-binding="true">
-        <constraints>
-          <grid row="13" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <enabled value="false"/>
-          <text value="Brisanje objav"/>
-        </properties>
-      </component>
       <component id="48b78" class="javax.swing.JComboBox" binding="krajiCombo">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
-      </component>
-      <component id="b38c1" class="javax.swing.JButton" binding="Btn_Prijava">
-        <constraints>
-          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <horizontalTextPosition value="11"/>
-          <text value="Sign In"/>
-          <toolTipText value="Prijavi se"/>
-        </properties>
-      </component>
-      <component id="81cab" class="javax.swing.JButton" binding="Btn_Registracija">
-        <constraints>
-          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Sign Up"/>
-          <toolTipText value="Registriraj se"/>
-        </properties>
       </component>
       <component id="5f153" class="javax.swing.JTextField" binding="textField5" default-binding="true">
         <constraints>
@@ -259,6 +231,39 @@
         </constraints>
         <properties>
           <text value="Dodaj sliko"/>
+        </properties>
+      </component>
+      <component id="33432" class="javax.swing.JButton" binding="brisanjeObjavButton" default-binding="true">
+        <constraints>
+          <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value="Brisanje objav"/>
+        </properties>
+      </component>
+      <component id="fb224" class="javax.swing.JButton" binding="signOutButton" default-binding="true">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Sign Out"/>
+        </properties>
+      </component>
+      <component id="22771" class="javax.swing.JButton" binding="Btn_Prijava">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Btn Sign In"/>
+        </properties>
+      </component>
+      <component id="36109" class="javax.swing.JButton" binding="Btn_Reg">
+        <constraints>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Btn Sign Up"/>
         </properties>
       </component>
     </children>
