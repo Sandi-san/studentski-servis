@@ -247,6 +247,23 @@ public class DatabaseConnection {
         return  podjetja;
     }
 
+    public int Get_ID_Kraja(String g, int h){
+        int i = 1;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT id FROM kraji WHERE (ime = '" + g + "') AND (post_st = '" + h + "')";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int id = rs.getInt("id");
+                i = id;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
+
     public int Get_ID_Podjetja(String a, String b, String c){
         int i = 1;
         try(Connection connection = Connect()){

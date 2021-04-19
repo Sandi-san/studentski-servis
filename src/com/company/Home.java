@@ -435,6 +435,28 @@ public class Home {
             signInButton.setVisible(false);
             signUpButton.setVisible(false);
         });
+
+        krajiTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                zbrisiButtonK.setEnabled(true);
+                posodobiButtonK.setEnabled(true);
+
+                DefaultTableModel model = (DefaultTableModel)krajiTable.getModel();
+                int index = krajiTable.getSelectedRow();
+
+                textField9.setText(model.getValueAt(index,0).toString());
+                textField10.setText(model.getValueAt(index,1).toString());
+
+                String a = model.getValueAt(index,0).toString();
+                int b = Integer.parseInt(textField10.getText());
+
+                id_k = dc.Get_ID_Kraja(a, b);
+            }
+        });
+        posodobiButtonK.addActionListener(actionEvent -> {
+
+        });
     }
 
     private void setTables(){
