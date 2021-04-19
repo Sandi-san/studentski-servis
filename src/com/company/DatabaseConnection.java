@@ -264,6 +264,28 @@ public class DatabaseConnection {
         return i;
     }
 
+    public void Posodabljanje_Kraja(int idK, String a, int b){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE kraji SET ime = '" + a +"', post_st = '" + b + "' WHERE id = '" + idK + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void Zbrisi_Kraj(int i){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "DELETE FROM kraji WHERE id = '" + i + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public int Get_ID_Podjetja(String a, String b, String c){
         int i = 1;
         try(Connection connection = Connect()){

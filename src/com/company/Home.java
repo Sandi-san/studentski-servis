@@ -411,6 +411,8 @@ public class Home {
                 textField9.setText("");
                 textField10.setText("");
             }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
 
         signUpButton1.addActionListener(actionEvent -> {
@@ -454,7 +456,41 @@ public class Home {
                 id_k = dc.Get_ID_Kraja(a, b);
             }
         });
+
         posodobiButtonK.addActionListener(actionEvent -> {
+            if(mail_admina != null)
+            {
+                String ime = textField9.getText();
+                int posta = Integer.parseInt(textField10.getText());
+
+                dc.Posodabljanje_Kraja(id_k, ime, posta);
+                DefaultTableModel model = (DefaultTableModel)krajiTable.getModel();
+                model.setRowCount(0);
+                textField9.setText("");
+                textField10.setText("");
+                for(String line:dc.Return_Vse_Kraje()){
+                    model.addRow(line.split(","));
+                }
+                posodobiButtonK.setEnabled(false);
+                zbrisiButtonK.setEnabled(false);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+        });
+
+        zbrisiButtonK.addActionListener(actionEvent -> {
+            if(mail_admina != null){
+                dc.Zbrisi_Kraj(id_k);
+                textField9.setText("");
+                textField10.setText("");
+                DefaultTableModel modelCompany = (DefaultTableModel)krajiTable.getModel();
+                int index = krajiTable.getSelectedRow();
+                modelCompany.removeRow(index);
+                posodobiButtonK.setEnabled(false);
+                zbrisiButtonK.setEnabled(false);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
 
         });
     }
