@@ -29,7 +29,7 @@ public class DatabaseConnection {
             {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
-            //Get complete hashed password in hex format
+
             generatedPassword = sb.toString();
         }
         catch (NoSuchAlgorithmException e)
@@ -207,6 +207,48 @@ public class DatabaseConnection {
         }
         return podjetja;
     }
+
+    public ArrayList<String> Return_Vsa_Podjetja(){
+        ArrayList <String> podjetja =  new ArrayList<>();
+
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT p.naslov,p.telefon,k.ime FROM podjetja p INNER JOIN kraji k ON k.id = p.kraj_id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String naslov = rs.getString("naslov");
+                String fon = rs.getString("telefon");
+                String ime = rs.getString("ime");
+
+                podjetja.add(naslov + "," + fon + "," + ime);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return  podjetja;
+    }
+
+    public ArrayList<String> Return_Kraj_Podjetja(String kraj){
+        ArrayList <String> podjetja =  new ArrayList<>();
+
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT p.naslov,p.telefon,k.ime FROM podjetja p INNER JOIN kraji k ON k.id = p.kraj_id WHERE (k.ime = '" + kraj + "')";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                String naslov = rs.getString("naslov");
+                String fon = rs.getString("telefon");
+                String ime = rs.getString("ime");
+
+                podjetja.add(naslov + "," + fon + "," + ime);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return  podjetja;
+    }
+
     public ArrayList<String> Return_Kraj_Objava(String kraj){
         ArrayList <String> objave =  new ArrayList<>();
 
@@ -238,6 +280,17 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
             String sql = "INSERT INTO delovna_mesta(naziv, opis, placa, trajanje, delovnik, sifra, prosta_mesta, kraj_id, podjetje_id, admin_id) VALUES('" + a + "', '" + b + "', '" + c + "', '" + d + "', '" + g +"', '" + z + "', '" + h +"', (SELECT id FROM kraji WHERE ime = '" + k +"') , (SELECT id FROM podjetja WHERE naslov = '" + p + "'), (SELECT id FROM admini WHERE email = '" + j + "') )";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void AddCompany(String a, String b, String c){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "INSERT INTO podjetja(naslov, telefon, kraj_id) VALUES('" + a +"', '" + b +"', (SELECT id FROM kraji WHERE ime = '" + c +"'))";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
