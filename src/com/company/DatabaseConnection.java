@@ -353,6 +353,12 @@ public class DatabaseConnection {
         return objave;
     }
 
+    public ArrayList<String> Return_Vsa_Narocanja(){
+        ArrayList<String> n = new ArrayList<>();
+
+        return n;
+    }
+
     public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, String j){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();

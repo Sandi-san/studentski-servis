@@ -60,6 +60,15 @@ public class Home {
     private JButton posodobiButtonK;
     private JTable krajiTable;
     private JTextField textField10;
+    private JLabel narocanjeLabel;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JButton button1;
+    private JButton button2;
+    private JButton button3;
+    private JTextField textField13;
+    private JTable table1;
+    private JButton zbrisiButtonN;
 
     public static void DobMail(String ab){
         mail_admina = ab;
@@ -112,6 +121,7 @@ public class Home {
         title.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         podjetjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         krajiLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        narocanjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
 
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
@@ -499,6 +509,7 @@ public class Home {
         String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Slika", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
+        String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
