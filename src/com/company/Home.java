@@ -2,10 +2,17 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 public class Home {
     ImageIcon ic = null;
@@ -63,9 +70,9 @@ public class Home {
     private JLabel narocanjeLabel;
     private JTextField textField11;
     private JTextField textField12;
-    private JButton button1;
-    private JButton button2;
-    private JButton button3;
+    private JButton signOutButton3;
+    private JButton signInButton2;
+    private JButton signUpButton2;
     private JTextField textField13;
     private JTable table1;
     private JButton zbrisiButtonN;
@@ -91,6 +98,8 @@ public class Home {
             signUpButton.setVisible(false);
             signInButton1.setVisible(false);
             signUpButton1.setVisible(false);
+            signUpButton2.setVisible(false);
+            signInButton2.setVisible(false);
         }
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
@@ -286,12 +295,19 @@ public class Home {
         });
         signOutButton.addActionListener(actionEvent -> {
             mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            signUpButton1.setVisible(false);
-            signInButton1.setVisible(false);
-            signInButton.setVisible(false);
-            signUpButton.setVisible(false);
+            Btn_Prijava.setVisible(true);
+            Btn_Reg.setVisible(true);
+            signUpButton1.setVisible(true);
+            signInButton1.setVisible(true);
+            signInButton.setVisible(true);
+            signUpButton.setVisible(true);
+            signInButton2.setVisible(true);
+            signUpButton2.setVisible(true);
+
+            signOutButton.setVisible(false);
+            signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         });
 
         Btn_Reg.addActionListener(actionEvent -> {
@@ -331,10 +347,19 @@ public class Home {
 
         signOutButton1.addActionListener(actionEvent -> {
             mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            signUpButton.setVisible(false);
-            signInButton.setVisible(false);
+            Btn_Prijava.setVisible(true);
+            Btn_Reg.setVisible(true);
+            signUpButton1.setVisible(true);
+            signInButton1.setVisible(true);
+            signInButton.setVisible(true);
+            signUpButton.setVisible(true);
+            signInButton2.setVisible(true);
+            signUpButton2.setVisible(true);
+
+            signOutButton.setVisible(false);
+            signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         });
 
         companyTable.addMouseListener(new MouseAdapter() {
@@ -437,15 +462,19 @@ public class Home {
 
         signOutButton2.addActionListener(actionEvent -> {
             mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            signUpButton1.setVisible(false);
-            signInButton1.setVisible(false);
-            signInButton.setVisible(false);
-            signUpButton.setVisible(false);
+            Btn_Prijava.setVisible(true);
+            Btn_Reg.setVisible(true);
+            signUpButton1.setVisible(true);
+            signInButton1.setVisible(true);
+            signInButton.setVisible(true);
+            signUpButton.setVisible(true);
+            signInButton2.setVisible(true);
+            signUpButton2.setVisible(true);
+
+            signOutButton.setVisible(false);
+            signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         });
 
         krajiTable.addMouseListener(new MouseAdapter() {
@@ -503,13 +532,25 @@ public class Home {
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
 
         });
+
+        signInButton2.addActionListener(actionEvent -> {
+            jframe.dispose();
+            new prijava();
+        });
+
+        signUpButton2.addActionListener(actionEvent -> {
+            jframe.dispose();
+            new registracija();
+        });
     }
 
     private void setTables(){
-        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Slika", "Naročanje"};
+        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
         String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto"};
+
+        //String[] data = {"Naroči se"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
@@ -518,7 +559,10 @@ public class Home {
         DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
         for(String line:dc.Return_Objave()){
             modelPosts.addRow(line.split(","));
+           // modelPosts.addRow(data);
         }
+        postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+        postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
 
         companyTable.setModel(new DefaultTableModel(
                 null,
@@ -553,5 +597,101 @@ public class Home {
             modelPosts.addRow(data);
         }
 
+
     }
+    class ButtonRenderer extends JButton implements TableCellRenderer
+    {
+
+        //CONSTRUCTOR
+        public ButtonRenderer() {
+            //SET BUTTON PROPERTIES
+            setOpaque(true);
+        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object obj,
+                                                       boolean selected, boolean focused, int row, int col) {
+
+            //SET PASSED OBJECT AS BUTTON TEXT
+            setText((obj==null) ? "":obj.toString());
+
+            return this;
+        }
+
+    }
+
+    //BUTTON EDITOR CLASS
+    class ButtonEditor extends DefaultCellEditor
+    {
+        protected JButton btn;
+        private String lbl ;
+        private Boolean clicked;
+
+        public ButtonEditor(JTextField txt) {
+            super(txt);
+
+            btn=new JButton();
+            btn.setOpaque(true);
+
+            //WHEN BUTTON IS CLICKED
+            btn.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        //OVERRIDE A COUPLE OF METHODS
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object obj,
+                                                     boolean selected, int row, int col) {
+
+            //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+            lbl=(obj==null) ? "":obj.toString();
+            btn.setText(lbl);
+            clicked=true;
+            return btn;
+        }
+
+        //IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
+        @Override
+        public Object getCellEditorValue() {
+
+            if(clicked)
+            {
+                //pošl to pa mail od študenta funkciji za insertanje naročanj v DatabaseConnection.java
+                String sifra = textField5.getText();
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                java.util.Date utilDate = new java.util.Date();
+                Timestamp s = new Timestamp(utilDate.getTime());
+
+                /*java.util.Date date = new java.util.Date();
+                Timestamp ts=new Timestamp(date.getTime());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
+                //JOptionPane.showMessageDialog(null, s);
+                //dc.Insert_Narocanja(datum, mailStudent, sifra);
+                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
+            }
+            //SET IT TO FALSE NOW THAT ITS CLICKED
+            clicked=false;
+            return new String(lbl);
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+
+            //SET CLICKED TO FALSE FIRST
+            clicked=false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+            // TODO Auto-generated method stub
+            super.fireEditingStopped();
+        }
+    }
+
 }

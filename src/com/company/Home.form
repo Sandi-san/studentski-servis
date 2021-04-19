@@ -594,28 +594,28 @@
                   <text value="Študent"/>
                 </properties>
               </component>
-              <component id="fb548" class="javax.swing.JButton" binding="button1" default-binding="true">
+              <component id="fb548" class="javax.swing.JButton" binding="signOutButton3" default-binding="true">
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Button"/>
+                  <text value="Sign Out"/>
                 </properties>
               </component>
-              <component id="62a1b" class="javax.swing.JButton" binding="button2" default-binding="true">
+              <component id="62a1b" class="javax.swing.JButton" binding="signInButton2" default-binding="true">
                 <constraints>
                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Button"/>
+                  <text value="Sign In"/>
                 </properties>
               </component>
-              <component id="b327c" class="javax.swing.JButton" binding="button3" default-binding="true">
+              <component id="b327c" class="javax.swing.JButton" binding="signUpButton2" default-binding="true">
                 <constraints>
                   <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Button"/>
+                  <text value="Sign Up"/>
                 </properties>
               </component>
               <component id="1d8a4" class="javax.swing.JTextField" binding="textField13" default-binding="true">
