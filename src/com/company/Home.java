@@ -9,8 +9,9 @@ import java.io.File;
 public class Home {
     ImageIcon ic = null;
     static String mail_admina;
-    static int id_o;
+    static int id_o, id_p, id_k;
     DatabaseConnection dc = new DatabaseConnection();
+
     private JPanel homePanel;
     private JButton Btn_Prijava;
     private JTable postsTable;
@@ -80,7 +81,7 @@ public class Home {
             String ime = krajiCombo.getSelectedItem().toString();
             DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
             model.setRowCount(0);
-            if(ime == "Vse"){
+            if(ime.equals("Vse")){
                 for(String line:dc.Return_Objave()){
                     model.addRow(line.split(","));
                 }
@@ -148,6 +149,7 @@ public class Home {
                 DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
                 int index = postsTable.getSelectedRow();
                 model.removeRow(index);
+                brisanjeObjavButton.setEnabled(false);
             }
             else
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
@@ -186,7 +188,13 @@ public class Home {
                     textField4.setText("");
                     textField5.setText("");
                     textField6.setText("");
-                    postsTable.getSelectionModel().clearSelection();
+                    //postsTable.getSelectionModel().clearSelection();
+                    DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
+                    model.setRowCount(0);
+                    for(String line:dc.Return_Objave()){
+                        modelPosts.addRow(line.split(","));
+                    }
+                    posodabljanjeObjavButton.setEnabled(false);
                 }
             }
             else
@@ -258,13 +266,11 @@ public class Home {
         });
 
         Btn_Reg.addActionListener(actionEvent -> {
-            //homePanel.setVisible(false);
-            jframe.dispose();;
+            jframe.dispose();
             new registracija();
         });
 
         Btn_Prijava.addActionListener(actionEvent -> {
-            //homePanel.setVisible(false);
             jframe.dispose();
             new prijava();
         });
@@ -290,7 +296,7 @@ public class Home {
         });
 
         signUpButton.addActionListener(actionEvent -> {
-            jframe.dispose();;
+            jframe.dispose();
             new registracija();
         });
 
@@ -314,21 +320,41 @@ public class Home {
                 textField7.setText(model.getValueAt(index,0).toString());
                 textField8.setText(model.getValueAt(index,1).toString());
                 comboBox2.setSelectedItem(model.getValueAt(index,2).toString());
+
+                String naslov = model.getValueAt(index,0).toString();
+                String fonska = model.getValueAt(index,1).toString();
+                String k = model.getValueAt(index,2).toString();
+                id_p = dc.Get_ID_Podjetja(naslov, fonska, k);
             }
         });
 
         posodobiButtonC.addActionListener(actionEvent -> {
             if(mail_admina != null){
+                String naslov = textField7.getText();
+                String telefon = textField8.getText();
+                String kraj = comboBox2.getSelectedItem().toString();
 
+                dc.Posodobi_Podjetje(id_p, naslov, telefon, kraj);
+
+                DefaultTableModel model = (DefaultTableModel)companyTable.getModel();
+                model.setRowCount(0);
+                textField7.setText("");
+                textField8.setText("");
+                for(String line:dc.Return_Vsa_Podjetja()){
+                    model.addRow(line.split(","));
+                }
+                posodobiButtonC.setEnabled(false);
+                deleteButtonC.setEnabled(false);
             }
             else
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
+
         comboBox1.addItemListener(itemEvent -> {
             String ime = comboBox1.getSelectedItem().toString();
             DefaultTableModel model = (DefaultTableModel)companyTable.getModel();
             model.setRowCount(0);
-            if(ime == "Vse"){
+            if(ime.equals("Vse")){
                 for(String line:dc.Return_Vsa_Podjetja()){
                     model.addRow(line.split(","));
                 }
@@ -338,6 +364,21 @@ public class Home {
                     model.addRow(line.split(","));
                 }
             }
+        });
+
+        deleteButtonC.addActionListener(actionEvent -> {
+            if(mail_admina != null){
+                dc.Brisi_Podjetje(id_p);
+                textField7.setText("");
+                textField8.setText("");
+                DefaultTableModel modelCompany = (DefaultTableModel)companyTable.getModel();
+                int index = companyTable.getSelectedRow();
+                modelCompany.removeRow(index);
+                deleteButtonC.setEnabled(false);
+                posodobiButtonC.setEnabled(false);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
     }
 

@@ -249,6 +249,46 @@ public class DatabaseConnection {
         return  podjetja;
     }
 
+    public int Get_ID_Podjetja(String a, String b, String c){
+        int i = 1;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT p.id FROM podjetja p INNER JOIN kraji k ON k.id = p.kraj_id WHERE (p.naslov = '" + a + "') AND (p.telefon = '" + b +"') AND (k.ime = '" + c + "')";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int id = rs.getInt("id");
+                i = id;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    public void Posodobi_Podjetje(int id, String a, String b, String c)
+    {
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE podjetja SET naslov = '" + a + "', telefon = '" + b + "', kraj_id = (SELECT id FROM kraji WHERE ime = '" + c + "') WHERE id = '" + id +"' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void Brisi_Podjetje(int i){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "DELETE FROM podjetja WHERE id = '" + i +"' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<String> Return_Kraj_Objava(String kraj){
         ArrayList <String> objave =  new ArrayList<>();
 
