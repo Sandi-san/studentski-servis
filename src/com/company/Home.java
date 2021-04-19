@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.sql.SQLException;
 
 public class Home {
     ImageIcon ic = null;
@@ -49,6 +50,16 @@ public class Home {
     private JButton posodobiButtonC;
     private JButton deleteButtonC;
     private JTable companyTable;
+    private JLabel krajiLabel;
+    private JButton signOutButton2;
+    private JButton signInButton1;
+    private JButton signUpButton1;
+    private JTextField textField9;
+    private JButton dodajButtonK;
+    private JButton zbrisiButtonK;
+    private JButton posodobiButtonK;
+    private JTable krajiTable;
+    private JTextField textField10;
 
     public static void DobMail(String ab){
         mail_admina = ab;
@@ -61,6 +72,7 @@ public class Home {
         if(mail_admina == null){
             signOutButton.setVisible(false);
             signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
         }
         else
         {
@@ -68,6 +80,8 @@ public class Home {
             Btn_Reg.setVisible(false);
             signInButton.setVisible(false);
             signUpButton.setVisible(false);
+            signInButton1.setVisible(false);
+            signUpButton1.setVisible(false);
         }
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
@@ -97,6 +111,7 @@ public class Home {
 
         title.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         podjetjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        krajiLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
 
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
@@ -263,6 +278,10 @@ public class Home {
             mail_admina = null;
             Btn_Prijava.setVisible(false);
             Btn_Reg.setVisible(false);
+            signUpButton1.setVisible(false);
+            signInButton1.setVisible(false);
+            signInButton.setVisible(false);
+            signUpButton.setVisible(false);
         });
 
         Btn_Reg.addActionListener(actionEvent -> {
@@ -380,18 +399,111 @@ public class Home {
             else
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
+
+        dodajButtonK.addActionListener(actionEvent -> {
+            if(mail_admina != null){
+                String ime = textField9.getText();
+                int posta = Integer.parseInt(textField10.getText());
+
+                dc.SaveKraj(ime, posta);
+                AddRowToTables(new Object[]{ime, posta});
+
+                textField9.setText("");
+                textField10.setText("");
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+        });
+
+        signUpButton1.addActionListener(actionEvent -> {
+            jframe.dispose();
+            new registracija();
+        });
+
+        signInButton1.addActionListener(actionEvent -> {
+            jframe.dispose();
+            new prijava();
+        });
+
+        signOutButton2.addActionListener(actionEvent -> {
+            mail_admina = null;
+            Btn_Prijava.setVisible(false);
+            Btn_Reg.setVisible(false);
+            mail_admina = null;
+            Btn_Prijava.setVisible(false);
+            Btn_Reg.setVisible(false);
+            signUpButton1.setVisible(false);
+            signInButton1.setVisible(false);
+            signInButton.setVisible(false);
+            signUpButton.setVisible(false);
+        });
+
+        krajiTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                zbrisiButtonK.setEnabled(true);
+                posodobiButtonK.setEnabled(true);
+
+                DefaultTableModel model = (DefaultTableModel)krajiTable.getModel();
+                int index = krajiTable.getSelectedRow();
+
+                textField9.setText(model.getValueAt(index,0).toString());
+                textField10.setText(model.getValueAt(index,1).toString());
+
+                String a = model.getValueAt(index,0).toString();
+                int b = Integer.parseInt(textField10.getText());
+
+                id_k = dc.Get_ID_Kraja(a, b);
+            }
+        });
+
+        posodobiButtonK.addActionListener(actionEvent -> {
+            if(mail_admina != null)
+            {
+                String ime = textField9.getText();
+                int posta = Integer.parseInt(textField10.getText());
+
+                dc.Posodabljanje_Kraja(id_k, ime, posta);
+                DefaultTableModel model = (DefaultTableModel)krajiTable.getModel();
+                model.setRowCount(0);
+                textField9.setText("");
+                textField10.setText("");
+                for(String line:dc.Return_Vse_Kraje()){
+                    model.addRow(line.split(","));
+                }
+                posodobiButtonK.setEnabled(false);
+                zbrisiButtonK.setEnabled(false);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+        });
+
+        zbrisiButtonK.addActionListener(actionEvent -> {
+            if(mail_admina != null){
+                dc.Zbrisi_Kraj(id_k);
+                textField9.setText("");
+                textField10.setText("");
+                DefaultTableModel modelCompany = (DefaultTableModel)krajiTable.getModel();
+                int index = krajiTable.getSelectedRow();
+                modelCompany.removeRow(index);
+                posodobiButtonK.setEnabled(false);
+                zbrisiButtonK.setEnabled(false);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+
+        });
     }
 
     private void setTables(){
         String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Slika", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
-
+        String[] columnsKraji = {"Ime", "Poštna številka"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
                 columnsPosts
         ));
-
         DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
         for(String line:dc.Return_Objave()){
             modelPosts.addRow(line.split(","));
@@ -401,15 +513,27 @@ public class Home {
                 null,
                 columnsCompany
         ));
-
         DefaultTableModel modelCompany = (DefaultTableModel)companyTable.getModel();
         for(String line:dc.Return_Vsa_Podjetja()){
             modelCompany.addRow(line.split(","));
         }
+
+        krajiTable.setModel(new DefaultTableModel(
+                null,
+                columnsKraji
+        ));
+        DefaultTableModel modelKraji = (DefaultTableModel)krajiTable.getModel();
+        for(String line:dc.Return_Vse_Kraje()){
+            modelKraji.addRow(line.split(","));
+        }
     }
 
     private void AddRowToTables(Object[] data){
-        if(data.length == 3){
+        if(data.length == 2){
+            DefaultTableModel modelKraji = (DefaultTableModel)krajiTable.getModel();
+            modelKraji.addRow(data);
+        }
+        else if(data.length == 3){
             DefaultTableModel modelCompany = (DefaultTableModel)companyTable.getModel();
             modelCompany.addRow(data);
         }

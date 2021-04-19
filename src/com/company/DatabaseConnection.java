@@ -58,7 +58,7 @@ public class DatabaseConnection {
     }
 
 
-    public void Save(String ime_k, int posta) throws SQLException {
+    public void SaveKraj(String ime_k, int posta) {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
             String sql = "INSERT INTO kraji(ime, post_st) VALUES ('" + ime_k + "', '" + posta + "')";
@@ -70,25 +70,23 @@ public class DatabaseConnection {
 
     }
 
-    public void Izpis() throws SQLException{
+    public ArrayList<String> Return_Vse_Kraje(){
+        ArrayList<String> kraji = new ArrayList<>();
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
 
             String sql = "SELECT * FROM kraji";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
-                int id = rs.getInt("id");
                 String ime = rs.getString("ime");
                 int post_st = rs.getInt("post_st");
-
-                System.out.print("ID: " + id);
-                System.out.print(", Ime: " + ime);
-                System.out.println(", Poštna št.: " + post_st);
+                kraji.add(ime + "," + post_st);
             }
         }
-        catch(SQLException e){
+        catch (SQLException e){
             e.printStackTrace();
         }
+        return kraji;
     }
 
     public void SignUp(String name, String surname, String gender, String d, int number, String u, String mail, String Upass, String kraj){
@@ -247,6 +245,45 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
         return  podjetja;
+    }
+
+    public int Get_ID_Kraja(String g, int h){
+        int i = 1;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT id FROM kraji WHERE (ime = '" + g + "') AND (post_st = '" + h + "')";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int id = rs.getInt("id");
+                i = id;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    public void Posodabljanje_Kraja(int idK, String a, int b){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE kraji SET ime = '" + a +"', post_st = '" + b + "' WHERE id = '" + idK + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void Zbrisi_Kraj(int i){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "DELETE FROM kraji WHERE id = '" + i + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public int Get_ID_Podjetja(String a, String b, String c){
