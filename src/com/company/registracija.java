@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class registracija {
-    DatabaseConnection dc = new DatabaseConnection();
-
     private JButton Btn_SignUp;
     private JTextField textField1;
     private JLabel mainTitle;
@@ -28,19 +26,14 @@ public class registracija {
         Btn_SignUp.addActionListener(actionEvent -> {
             String email = textField1.getText();
             char[] geslo = passwordField1.getPassword();
-            //JOptionPane.showMessageDialog(null, "Hello world");
 
             DatabaseConnection con = new DatabaseConnection();
-
             try {
                 String newPass = con.Encrypt(String.valueOf(geslo));
-
-                //con.CheckUser(email, newPass);
 
                 con.AdminReg(email, newPass);
                 JOptionPane.showMessageDialog(null, "Dodaja uspešna");
 
-                panel1.setEnabled(false);
                 jframe.dispose();
                 new Home();
 

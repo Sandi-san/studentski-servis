@@ -31,10 +31,9 @@ public class prijava {
             try {
                 String newPass = con.Encrypt(String.valueOf(geslo));
                 boolean yes = con.CheckUser(email, newPass);
-                if (yes == true) {
+                if (yes) {
                     Home.DobMail(email);
                     new Home();
-                    panel1.setEnabled(false);
                     jframe.dispose();
                 }
                 else
