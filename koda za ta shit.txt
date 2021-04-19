@@ -1,0 +1,60 @@
+presteje st delovnih mest v kraju:
+CREATE FUNCTION st_delovnih_mest_v_kraju()
+RETURN INT AS
+$$
+DECLARE ST INT;
+BEGIN
+	SELECT INTO ST COUNT(*)
+	FROM kraji k INNER JOIN delovna_mesta dm ON k.id=dm.kraj_id
+	WHERE dm.kraj_id IS NOT NULL;
+	RETURN ST;
+END;
+$$ LANGUAGE 'plpgsql';
+
+inicializacija triggerja (kdaj se izvede):
+CREATE TRIGGER trigger_delovna_mesta_kraji
+AFTER INSERT OR DELETE ON delovna_mesta FOR EACH ROW
+EXECUTE PROCEDURE posodobi_delovna_mesta_kraji();
+
+sam trigger:
+CREATE OR REPLACE FUNCTION posodobi_delovna_mesta_kraji()
+RETURNS TRIGGER AS
+$$
+BEGIN
+  IF (tg_op = 'DELETE') THEN
+	UPDATE kraji k SET st_delovnih_mest= st_delovnih_mest-1
+	WHERE id=OLD.kraj_id;
+  END IF;
+  IF (tg_op = 'INSERT') THEN
+	UPDATE kraji k SET st_delovnih_mest=st_delovnih_mest+1
+	WHERE id=NEW.kraj_id;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE 'plpgsql';
+
+
+
+stevilo narocil za eno delovno mesto:
+
+inicializacija triggerja:
+CREATE TRIGGER trigger_prosta_mesta
+AFTER INSERT OR DELETE ON delovna_mesta FOR EACH ROW
+EXECUTE PROCEDURE posodobi_prosta_mesta_studenti();
+
+sam trigger:
+CREATE OR REPLACE FUNCTION posodobi_prosta_mesta_studenti()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	IF (tg_op = 'DELETE') THEN
+		UPDATE delovna_mesta SET prosta_mesta=prosta_mesta-1
+		WHERE id=OLD.delovno_mesto_id;
+	END IF;
+
+	IF (tg_op = 'INSERT') THEN
+		UPDATE delovna_mesta SET prosta_mesta=prosta_mesta+1
+		WHERE id=NEW.delovno_mesto_id;
+	END IF;
+END;
+$$ LANGUAGE 'plpgsql';
