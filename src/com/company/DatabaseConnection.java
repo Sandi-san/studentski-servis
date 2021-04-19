@@ -58,7 +58,7 @@ public class DatabaseConnection {
     }
 
 
-    public void Save(String ime_k, int posta) throws SQLException {
+    public void SaveKraj(String ime_k, int posta) {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
             String sql = "INSERT INTO kraji(ime, post_st) VALUES ('" + ime_k + "', '" + posta + "')";
@@ -70,25 +70,23 @@ public class DatabaseConnection {
 
     }
 
-    public void Izpis() throws SQLException{
+    public ArrayList<String> Return_Vse_Kraje(){
+        ArrayList<String> kraji = new ArrayList<>();
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
 
             String sql = "SELECT * FROM kraji";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
-                int id = rs.getInt("id");
                 String ime = rs.getString("ime");
                 int post_st = rs.getInt("post_st");
-
-                System.out.print("ID: " + id);
-                System.out.print(", Ime: " + ime);
-                System.out.println(", Poštna št.: " + post_st);
+                kraji.add(ime + "," + post_st);
             }
         }
-        catch(SQLException e){
+        catch (SQLException e){
             e.printStackTrace();
         }
+        return kraji;
     }
 
     public void SignUp(String name, String surname, String gender, String d, int number, String u, String mail, String Upass, String kraj){
