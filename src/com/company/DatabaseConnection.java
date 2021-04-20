@@ -145,6 +145,38 @@ public class DatabaseConnection {
         return isTrue;
     }
 
+    public boolean CheckStudent(String email, String geslo)
+    {
+        boolean isTrue = false;
+
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT email, pass FROM studenti;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                String mail = rs.getString("email");
+                String pass = rs.getString("pass");
+
+                //System.out.println("Iz baze: " + mail + " " + pass);
+
+                if (mail.equals(email))
+                {
+                    if (pass.equals(geslo))
+                    {
+                        //System.out.println("JE TRUE KURBA");
+                        isTrue = true;
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return isTrue;
+    }
+
     public ArrayList<String> Return_Objave(){
         ArrayList <String> objave =  new ArrayList<>();
 
