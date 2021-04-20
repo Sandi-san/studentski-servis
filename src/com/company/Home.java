@@ -76,6 +76,8 @@ public class Home {
     private JTextField textField13;
     private JTable table1;
     private JButton zbrisiButtonN;
+    private JButton Btn_StudentPrijava;
+    private JButton Btn_StudentReg;
 
     public static void DobMail(String ab){
         mail_admina = ab;
