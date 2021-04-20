@@ -18,6 +18,8 @@ public class Home {
     ImageIcon ic = null;
     static String mail_admina;
     static int id_o, id_p, id_k;
+    static int p_Mesta;
+    static String mail_studenta;
     DatabaseConnection dc = new DatabaseConnection();
 
     private JPanel homePanel;
@@ -74,12 +76,13 @@ public class Home {
     private JButton signInButton2;
     private JButton signUpButton2;
     private JTextField textField13;
-    private JTable table1;
+    private JTable narocanjeTable;
     private JButton zbrisiButtonN;
 
     public static void DobMail(String ab){
         mail_admina = ab;
     }
+    public static void MailStudenta(String a){mail_studenta = a;}
 
     public Home(){
         setTables();
@@ -269,6 +272,8 @@ public class Home {
                 int prosto = Integer.parseInt(textField6.getText());
                 String kraj = model.getValueAt(index,7).toString();
                 String podjetje = model.getValueAt(index,8).toString();
+
+                p_Mesta = dc.Return_ProstaMesta(sifra);
 
                 id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
             }
@@ -584,6 +589,15 @@ public class Home {
         for(String line:dc.Return_Vse_Kraje()){
             modelKraji.addRow(line.split(","));
         }
+
+        narocanjeTable.setModel(new DefaultTableModel(
+                null,
+                columnsNarocanja
+        ));
+        DefaultTableModel modelNarocanja = (DefaultTableModel)narocanjeTable.getModel();
+        for(String line:dc.Return_Narocanja()){
+            modelNarocanja.addRow(line.split(","));
+        }
     }
 
     private void AddRowToTables(Object[] data){
@@ -638,23 +652,27 @@ public class Home {
 
         @Override
         public Object getCellEditorValue() {
-            if(clicked)
-            {
-                //pošl to pa mail od študenta funkciji za insertanje naročanj v DatabaseConnection.java
-                String sifra = textField5.getText();
-                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                java.util.Date utilDate = new java.util.Date();
-                Timestamp s = new Timestamp(utilDate.getTime());
-                JOptionPane.showMessageDialog(null, s);
-                /*java.util.Date date = new java.util.Date();
-                Timestamp ts=new Timestamp(date.getTime());
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
-                //JOptionPane.showMessageDialog(null, s);
-                //dc.Insert_Narocanja(datum, mailStudent, sifra);
-                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
-            }
+            int prosto = Integer.parseInt(textField6.getText());
+            if(prosto > 0){
+                if(clicked)
+                {
+                    //String timeStamp = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS").format(new Timestamp(System.currentTimeMillis()));
+                    String sifra = textField5.getText();
+                    //DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
+                    java.util.Date utilDate = new java.util.Date();
+                    Timestamp datum = new Timestamp(utilDate.getTime());
+                    String s = datum.toString().split("\\.")[0];
+                    Timestamp ts = Timestamp.valueOf(s);
 
-            clicked=false;
+                    JOptionPane.showMessageDialog(null, ts);
+                    //dc.Insert_Narocanja(ts, mail_studenta, sifra);
+                }
+
+                clicked=false;
+            }
+            else
+                btn.setEnabled(false);
+
             return new String(lbl);
         }
 

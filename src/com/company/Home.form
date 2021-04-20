@@ -641,7 +641,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="f0883" class="javax.swing.JTable" binding="table1" default-binding="true">
+                  <component id="f0883" class="javax.swing.JTable" binding="narocanjeTable">
                     <constraints/>
                     <properties/>
                   </component>

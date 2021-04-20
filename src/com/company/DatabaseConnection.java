@@ -188,7 +188,22 @@ public class DatabaseConnection {
         }
         return kraji;
     }
-
+    public int Return_ProstaMesta(String a){
+        int i = 1;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM st_delovnih_mest_v_kraju('" + a + "')";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int prosto = rs.getInt(1);
+                i = prosto;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
     public ArrayList<String> Return_Podjetja(){
         ArrayList <String> podjetja = new ArrayList<>();
         try(Connection connection = Connect()){
@@ -230,13 +245,36 @@ public class DatabaseConnection {
     public void Insert_Narocanja(Timestamp a, String b, String c){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "INSERT INTO narocanja(datum, student_id, delovno_mesto_id) VALUES('" + a + "', (SELECT id FROM studenti WHERE email = '" + b +"'), (SELECT id FROM delovna_mesta WHERE sifra = '" + c +"')) ";
+            String sql = "INSERT INTO narocanja(datum_naroc, student_id, delovno_mesto_id) VALUES('" + a + "', (SELECT id FROM studenti WHERE email = '" + b +"'), (SELECT id FROM delovna_mesta WHERE sifra = '" + c +"')) ";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
             e.printStackTrace();
         }
     }
+
+    public ArrayList<String> Return_Narocanja(){
+        ArrayList <String> narocanja =  new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT n.datum_naroc, s.ime, s.priimek, dm.naziv, dm.sifra FROM narocanja INNER JOIN studenti s ON s.id = n.student_id INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                Timestamp naslov = rs.getTimestamp("datum_naroc");
+                String ime = rs.getString("ime");
+                String priimek = rs.getString("priimek");
+                String dMesto = rs.getString("naziv");
+                String sifra = rs.getString("sifra");
+
+                narocanja.add(naslov + "," + ime + " " + priimek + "," + dMesto + "," + sifra);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return narocanja;
+    }
+
     public ArrayList<String> Return_Kraj_Podjetja(String kraj){
         ArrayList <String> podjetja =  new ArrayList<>();
 
