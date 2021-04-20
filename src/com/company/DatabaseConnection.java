@@ -89,11 +89,11 @@ public class DatabaseConnection {
         return kraji;
     }
 
-    public void SignUp(String name, String surname, String gender, String d, int number, String u, String mail, String Upass, String kraj){
+    public void SignUp(String name, String surname, String gender, String d, String number, String u, String mail, String Upass, String kraj){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
 
-            String sql = "INSERT INTO studenti(ime, priimek, spol, datum_roj, telefon, username, email, pass, kraj_id) VALUES ('" + name + "', '" + surname + "' , '" + gender + "'  , '" + d + "', '" + number + "', '" + u + "', '" + mail + "', '" + Upass + "', (SELECT ime FROM kraji WHERE ime = '" + kraj +"'))";
+            String sql = "INSERT INTO studenti(ime, priimek, spol, datum_roj, telefon, username, email, pass, kraj_id) VALUES ('" + name + "', '" + surname + "' , '" + gender + "'  , '" + d + "', '" + number + "', '" + u + "', '" + mail + "', '" + Upass + "', (SELECT id FROM kraji WHERE ime = '" + kraj +"'))";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
@@ -121,6 +121,38 @@ public class DatabaseConnection {
             Statement stmt = connection.createStatement();
 
             String sql = "SELECT email, pass FROM admini;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                String mail = rs.getString("email");
+                String pass = rs.getString("pass");
+
+                //System.out.println("Iz baze: " + mail + " " + pass);
+
+                if (mail.equals(email))
+                {
+                    if (pass.equals(geslo))
+                    {
+                        //System.out.println("JE TRUE KURBA");
+                        isTrue = true;
+                    }
+                }
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return isTrue;
+    }
+
+    public boolean CheckStudent(String email, String geslo)
+    {
+        boolean isTrue = false;
+
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT email, pass FROM studenti;";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
                 String mail = rs.getString("email");
