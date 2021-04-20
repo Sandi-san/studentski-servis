@@ -2,6 +2,9 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class regStudenti {
@@ -11,9 +14,14 @@ public class regStudenti {
     private JButton button2;
     private JLabel spolButton;
     private JButton SignUp;
-    private JTextField textField2;
-    private JTextField textField3;
+    private JTextField textFieldDatum;
+    private JTextField textFieldTelefon;
+    private JTextField textFieldUsername;
     private JTextField textField1;
+    private JPasswordField passwordField1;
+    private JTextField textFieldPriimek;
+    private JTextField textFieldIme;
+    private JComboBox PrijavakrajiCombo;
 
     public regStudenti() {
         JFrame jframe = new JFrame("Registracija");
@@ -24,7 +32,10 @@ public class regStudenti {
         jframe.setResizable(false);
         jframe.setVisible(true);
         mainTitle.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        //textField1.setPreferredSize(new Dimension(10,5));
+
+        //Prikaž kraje v comboboxu
+        DatabaseConnection dc = new DatabaseConnection();
+        dc.Return_Kraje().forEach((e) -> PrijavakrajiCombo.addItem(e));
 
         AtomicReference<Character> spol = new AtomicReference<>('M');
         spolButton.setText("Moški");
@@ -42,16 +53,30 @@ public class regStudenti {
         });
 
         SignUp.addActionListener(actionEvent -> {
-            JOptionPane.showMessageDialog(null, spol.toString());
-            /*
+            //sJOptionPane.showMessageDialog(null, spol.toString());
+
+            String ime = textFieldIme.getText();
+            String priimek = textFieldPriimek.getText();
+            //spol
+            String datumroj = textFieldDatum.getText();
+            /*try {
+                Date realdatumroj = new SimpleDateFormat("yyyy-MM-dd").parse(datumroj);
+                System.out.println("pru: " + datumroj + "Drug: \t" + realdatumroj);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+             */
+            String tel = textFieldTelefon.getText();
+            String user = textFieldUsername.getText();
             String email = textField1.getText();
             char[] geslo = passwordField1.getPassword();
+            String kraj = PrijavakrajiCombo.getSelectedItem().toString();
 
             DatabaseConnection con = new DatabaseConnection();
             try {
                 String newPass = con.Encrypt(String.valueOf(geslo));
 
-                con.AdminReg(email, newPass);
+                con.SignUp(ime, priimek, spol.toString(), datumroj, tel, user, email, newPass, kraj);
                 JOptionPane.showMessageDialog(null, "Dodaja uspešna");
 
                 jframe.dispose();
@@ -60,7 +85,6 @@ public class regStudenti {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            */
         });
     }
 
