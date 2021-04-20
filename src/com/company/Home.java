@@ -116,11 +116,15 @@ public class Home {
             if(ime.equals("Vse")){
                 for(String line:dc.Return_Objave()){
                     model.addRow(line.split(","));
+                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                 }
             }
             else{
                 for(String line:dc.Return_Kraj_Objava(ime)){
                     model.addRow(line.split(","));
+                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                 }
             }
 
@@ -228,6 +232,8 @@ public class Home {
                     for(String line:dc.Return_Objave()){
                         modelPosts.addRow(line.split(","));
                     }
+                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                     posodabljanjeObjavButton.setEnabled(false);
                 }
             }
@@ -550,8 +556,6 @@ public class Home {
         String[] columnsKraji = {"Ime", "Poštna številka"};
         String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto"};
 
-        //String[] data = {"Naroči se"};
-
         postsTable.setModel(new DefaultTableModel(
                 null,
                 columnsPosts
@@ -559,7 +563,6 @@ public class Home {
         DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
         for(String line:dc.Return_Objave()){
             modelPosts.addRow(line.split(","));
-           // modelPosts.addRow(data);
         }
         postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
         postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
@@ -596,30 +599,20 @@ public class Home {
             DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
             modelPosts.addRow(data);
         }
-
-
     }
     class ButtonRenderer extends JButton implements TableCellRenderer
     {
-
-        //CONSTRUCTOR
         public ButtonRenderer() {
-            //SET BUTTON PROPERTIES
             setOpaque(true);
         }
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object obj,
-                                                       boolean selected, boolean focused, int row, int col) {
-
-            //SET PASSED OBJECT AS BUTTON TEXT
+        public Component getTableCellRendererComponent(JTable table, Object obj, boolean selected, boolean focused, int row, int col) {
             setText((obj==null) ? "":obj.toString());
-
             return this;
         }
 
     }
 
-    //BUTTON EDITOR CLASS
     class ButtonEditor extends DefaultCellEditor
     {
         protected JButton btn;
@@ -632,33 +625,19 @@ public class Home {
             btn=new JButton();
             btn.setOpaque(true);
 
-            //WHEN BUTTON IS CLICKED
-            btn.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    fireEditingStopped();
-                }
-            });
+            btn.addActionListener(e -> fireEditingStopped());
         }
 
-        //OVERRIDE A COUPLE OF METHODS
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object obj,
-                                                     boolean selected, int row, int col) {
-
-            //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+        public Component getTableCellEditorComponent(JTable table, Object obj, boolean selected, int row, int col) {
             lbl=(obj==null) ? "":obj.toString();
             btn.setText(lbl);
             clicked=true;
             return btn;
         }
 
-        //IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
         @Override
         public Object getCellEditorValue() {
-
             if(clicked)
             {
                 //pošl to pa mail od študenta funkciji za insertanje naročanj v DatabaseConnection.java
@@ -666,7 +645,7 @@ public class Home {
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 java.util.Date utilDate = new java.util.Date();
                 Timestamp s = new Timestamp(utilDate.getTime());
-
+                JOptionPane.showMessageDialog(null, s);
                 /*java.util.Date date = new java.util.Date();
                 Timestamp ts=new Timestamp(date.getTime());
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
@@ -674,15 +653,13 @@ public class Home {
                 //dc.Insert_Narocanja(datum, mailStudent, sifra);
                 //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
             }
-            //SET IT TO FALSE NOW THAT ITS CLICKED
+
             clicked=false;
             return new String(lbl);
         }
 
         @Override
         public boolean stopCellEditing() {
-
-            //SET CLICKED TO FALSE FIRST
             clicked=false;
             return super.stopCellEditing();
         }
