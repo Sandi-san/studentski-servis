@@ -1,4 +1,9 @@
-# studentski-servis
+# Študentski servis
+
+## OPIS
+Aplikacija gre za prijavo študentov na delovna mesta, katera organizirajo podjetja.
+Admini (iz podjetji) objavljajo delovna mesta, študenti se pa naročajo nanj.
+Posamezno delovno mesto lahko ima komentarje ter ima določeno število prostih mest na katere se prijavljajo.
 
 podprogrami / trigger:
 1. add column st delovnih mest v tableo kraji -> trigger povecas/zmansaj st delovnih mest
