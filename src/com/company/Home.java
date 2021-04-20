@@ -16,10 +16,11 @@ import java.time.format.DateTimeFormatter;
 
 public class Home {
     ImageIcon ic = null;
+    static String mail_studenta;
     static String mail_admina;
     static int id_o, id_p, id_k;
     static int p_Mesta;
-    static String mail_studenta;
+
     DatabaseConnection dc = new DatabaseConnection();
 
     private JPanel homePanel;
@@ -147,6 +148,10 @@ public class Home {
         jframe.pack();
         jframe.setSize(1000, 700);
         jframe.setVisible(true);
+
+        textField11.setEditable(false);
+        textField12.setEditable(false);
+        textField13.setEditable(false);
 
         Btn_AddPost.addActionListener(actionEvent -> {
             if(mail_admina != null){
@@ -555,13 +560,39 @@ public class Home {
             jframe.dispose();
             new registracija();
         });
+
+        narocanjeTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                DefaultTableModel model = (DefaultTableModel)narocanjeTable.getModel();
+                int index = narocanjeTable.getSelectedRow();
+
+                textField11.setText(model.getValueAt(index,0).toString());
+                textField12.setText(model.getValueAt(index,1).toString());
+                textField13.setText(model.getValueAt(index,2).toString());
+
+                String a = model.getValueAt(index,0).toString();
+                String b = model.getValueAt(index,1).toString();
+                String c = model.getValueAt(index,3).toString();
+
+                //id_k = dc.Get_ID_Kraja(a, b);
+            }
+        });
+        Btn_StudentPrijava.addActionListener(actionEvent -> {
+            new prijavaStudenti();
+            jframe.dispose();
+        });
+        Btn_StudentReg.addActionListener(actionEvent -> {
+            new regStudenti();
+            jframe.dispose();
+        });
     }
 
     private void setTables(){
         String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
-        String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto"};
+        String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto", "Šifra"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
@@ -655,25 +686,34 @@ public class Home {
         @Override
         public Object getCellEditorValue() {
             int prosto = Integer.parseInt(textField6.getText());
-            if(prosto > 0){
-                if(clicked)
-                {
-                    //String timeStamp = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS").format(new Timestamp(System.currentTimeMillis()));
-                    String sifra = textField5.getText();
-                    //DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
-                    java.util.Date utilDate = new java.util.Date();
-                    Timestamp datum = new Timestamp(utilDate.getTime());
-                    String s = datum.toString().split("\\.")[0];
-                    Timestamp ts = Timestamp.valueOf(s);
+            if(mail_studenta != null){
+                if(prosto > 0){
 
-                    JOptionPane.showMessageDialog(null, ts);
-                    //dc.Insert_Narocanja(ts, mail_studenta, sifra);
+                    if(clicked)
+                    {
+                        //trigger za prosta mesta treba ficat
+                        DefaultTableModel model = (DefaultTableModel)narocanjeTable.getModel();
+                        int index = narocanjeTable.getSelectedRow();
+                        //String timeStamp = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS").format(new Timestamp(System.currentTimeMillis()));
+                        String sifra = model.getValueAt(index,5).toString();
+                        //String sifra2 = textField5.getText();
+                        //DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
+                        java.util.Date utilDate = new java.util.Date();
+                        Timestamp datum = new Timestamp(utilDate.getTime());
+                        String s = datum.toString().split("\\.")[0];
+                        Timestamp ts = Timestamp.valueOf(s);
+                        //System.out.println(sifra);
+                        //JOptionPane.showMessageDialog(null, ts);
+                        dc.Insert_Narocanja(ts, mail_studenta, sifra);
+                        //Object data = new Object[]{ts, mail_studenta, sifra});
+                        //model.addRow(data);
+                    }
+
+                    clicked=false;
                 }
-
-                clicked=false;
+                else
+                    btn.setEnabled(false);
             }
-            else
-                btn.setEnabled(false);
 
             return new String(lbl);
         }

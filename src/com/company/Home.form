@@ -578,14 +578,6 @@
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
-              <component id="f322d" class="javax.swing.JTextField" binding="textField12" default-binding="true">
-                <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                </constraints>
-                <properties/>
-              </component>
               <component id="8a390" class="javax.swing.JLabel">
                 <constraints>
                   <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -593,14 +585,6 @@
                 <properties>
                   <text value="Datum"/>
                 </properties>
-              </component>
-              <component id="e9ad1" class="javax.swing.JTextField" binding="textField11" default-binding="true">
-                <constraints>
-                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                </constraints>
-                <properties/>
               </component>
               <component id="f16fe" class="javax.swing.JLabel">
                 <constraints>
@@ -670,6 +654,22 @@
                 <properties>
                   <text value="Zbriši"/>
                 </properties>
+              </component>
+              <component id="f322d" class="javax.swing.JTextField" binding="textField12" default-binding="true">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="e9ad1" class="javax.swing.JTextField" binding="textField11" default-binding="true">
+                <constraints>
+                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
               </component>
             </children>
           </grid>

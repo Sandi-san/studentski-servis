@@ -158,13 +158,11 @@ public class DatabaseConnection {
                 String mail = rs.getString("email");
                 String pass = rs.getString("pass");
 
-                //System.out.println("Iz baze: " + mail + " " + pass);
-
                 if (mail.equals(email))
                 {
                     if (pass.equals(geslo))
                     {
-                        //System.out.println("JE TRUE KURBA");
+                        Home.MailStudenta(mail);
                         isTrue = true;
                     }
                 }
@@ -289,7 +287,7 @@ public class DatabaseConnection {
         ArrayList <String> narocanja =  new ArrayList<>();
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT n.datum_naroc, s.ime, s.priimek, dm.naziv, dm.sifra FROM narocanja INNER JOIN studenti s ON s.id = n.student_id INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id";
+            String sql = "SELECT n.datum_naroc, s.ime, s.priimek, dm.naziv, dm.sifra FROM narocanja n INNER JOIN studenti s ON s.id = n.student_id INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 Timestamp naslov = rs.getTimestamp("datum_naroc");
