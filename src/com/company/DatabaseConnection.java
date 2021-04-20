@@ -163,7 +163,7 @@ public class DatabaseConnection {
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + e + "," + g + "," + Plac + "," + Kraj + "," + Podjetje);
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + e + "," + g + "," + Plac + "," + Kraj + "," + Podjetje +  "," +"Naroči se");
             }
         }
         catch(SQLException e){
@@ -227,6 +227,16 @@ public class DatabaseConnection {
         return  podjetja;
     }
 
+    public void Insert_Narocanja(Timestamp a, String b, String c){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "INSERT INTO narocanja(datum, student_id, delovno_mesto_id) VALUES('" + a + "', (SELECT id FROM studenti WHERE email = '" + b +"'), (SELECT id FROM delovna_mesta WHERE sifra = '" + c +"')) ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
     public ArrayList<String> Return_Kraj_Podjetja(String kraj){
         ArrayList <String> podjetja =  new ArrayList<>();
 
@@ -351,6 +361,12 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
         return objave;
+    }
+
+    public ArrayList<String> Return_Vsa_Narocanja(){
+        ArrayList<String> n = new ArrayList<>();
+
+        return n;
     }
 
     public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, String j){

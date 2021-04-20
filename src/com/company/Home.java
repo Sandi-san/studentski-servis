@@ -2,10 +2,17 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 public class Home {
     ImageIcon ic = null;
@@ -60,6 +67,15 @@ public class Home {
     private JButton posodobiButtonK;
     private JTable krajiTable;
     private JTextField textField10;
+    private JLabel narocanjeLabel;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JButton signOutButton3;
+    private JButton signInButton2;
+    private JButton signUpButton2;
+    private JTextField textField13;
+    private JTable table1;
+    private JButton zbrisiButtonN;
 
     public static void DobMail(String ab){
         mail_admina = ab;
@@ -82,6 +98,8 @@ public class Home {
             signUpButton.setVisible(false);
             signInButton1.setVisible(false);
             signUpButton1.setVisible(false);
+            signUpButton2.setVisible(false);
+            signInButton2.setVisible(false);
         }
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
@@ -98,11 +116,15 @@ public class Home {
             if(ime.equals("Vse")){
                 for(String line:dc.Return_Objave()){
                     model.addRow(line.split(","));
+                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                 }
             }
             else{
                 for(String line:dc.Return_Kraj_Objava(ime)){
                     model.addRow(line.split(","));
+                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                 }
             }
 
@@ -112,6 +134,7 @@ public class Home {
         title.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         podjetjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         krajiLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        narocanjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
 
         JFrame jframe = new JFrame("Home");
         jframe.setContentPane(homePanel);
@@ -209,6 +232,8 @@ public class Home {
                     for(String line:dc.Return_Objave()){
                         modelPosts.addRow(line.split(","));
                     }
+                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                     posodabljanjeObjavButton.setEnabled(false);
                 }
             }
@@ -276,12 +301,19 @@ public class Home {
         });
         signOutButton.addActionListener(actionEvent -> {
             mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            signUpButton1.setVisible(false);
-            signInButton1.setVisible(false);
-            signInButton.setVisible(false);
-            signUpButton.setVisible(false);
+            Btn_Prijava.setVisible(true);
+            Btn_Reg.setVisible(true);
+            signUpButton1.setVisible(true);
+            signInButton1.setVisible(true);
+            signInButton.setVisible(true);
+            signUpButton.setVisible(true);
+            signInButton2.setVisible(true);
+            signUpButton2.setVisible(true);
+
+            signOutButton.setVisible(false);
+            signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         });
 
         Btn_Reg.addActionListener(actionEvent -> {
@@ -321,10 +353,19 @@ public class Home {
 
         signOutButton1.addActionListener(actionEvent -> {
             mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            signUpButton.setVisible(false);
-            signInButton.setVisible(false);
+            Btn_Prijava.setVisible(true);
+            Btn_Reg.setVisible(true);
+            signUpButton1.setVisible(true);
+            signInButton1.setVisible(true);
+            signInButton.setVisible(true);
+            signUpButton.setVisible(true);
+            signInButton2.setVisible(true);
+            signUpButton2.setVisible(true);
+
+            signOutButton.setVisible(false);
+            signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         });
 
         companyTable.addMouseListener(new MouseAdapter() {
@@ -427,15 +468,19 @@ public class Home {
 
         signOutButton2.addActionListener(actionEvent -> {
             mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            mail_admina = null;
-            Btn_Prijava.setVisible(false);
-            Btn_Reg.setVisible(false);
-            signUpButton1.setVisible(false);
-            signInButton1.setVisible(false);
-            signInButton.setVisible(false);
-            signUpButton.setVisible(false);
+            Btn_Prijava.setVisible(true);
+            Btn_Reg.setVisible(true);
+            signUpButton1.setVisible(true);
+            signInButton1.setVisible(true);
+            signInButton.setVisible(true);
+            signUpButton.setVisible(true);
+            signInButton2.setVisible(true);
+            signUpButton2.setVisible(true);
+
+            signOutButton.setVisible(false);
+            signOutButton1.setVisible(false);
+            signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         });
 
         krajiTable.addMouseListener(new MouseAdapter() {
@@ -493,12 +538,23 @@ public class Home {
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
 
         });
+
+        signInButton2.addActionListener(actionEvent -> {
+            jframe.dispose();
+            new prijava();
+        });
+
+        signUpButton2.addActionListener(actionEvent -> {
+            jframe.dispose();
+            new registracija();
+        });
     }
 
     private void setTables(){
-        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Slika", "Naročanje"};
+        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
+        String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
@@ -508,6 +564,8 @@ public class Home {
         for(String line:dc.Return_Objave()){
             modelPosts.addRow(line.split(","));
         }
+        postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
+        postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
 
         companyTable.setModel(new DefaultTableModel(
                 null,
@@ -541,6 +599,76 @@ public class Home {
             DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
             modelPosts.addRow(data);
         }
+    }
+    class ButtonRenderer extends JButton implements TableCellRenderer
+    {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object obj, boolean selected, boolean focused, int row, int col) {
+            setText((obj==null) ? "":obj.toString());
+            return this;
+        }
 
     }
+
+    class ButtonEditor extends DefaultCellEditor
+    {
+        protected JButton btn;
+        private String lbl ;
+        private Boolean clicked;
+
+        public ButtonEditor(JTextField txt) {
+            super(txt);
+
+            btn=new JButton();
+            btn.setOpaque(true);
+
+            btn.addActionListener(e -> fireEditingStopped());
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object obj, boolean selected, int row, int col) {
+            lbl=(obj==null) ? "":obj.toString();
+            btn.setText(lbl);
+            clicked=true;
+            return btn;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if(clicked)
+            {
+                //pošl to pa mail od študenta funkciji za insertanje naročanj v DatabaseConnection.java
+                String sifra = textField5.getText();
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                java.util.Date utilDate = new java.util.Date();
+                Timestamp s = new Timestamp(utilDate.getTime());
+                JOptionPane.showMessageDialog(null, s);
+                /*java.util.Date date = new java.util.Date();
+                Timestamp ts=new Timestamp(date.getTime());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
+                //JOptionPane.showMessageDialog(null, s);
+                //dc.Insert_Narocanja(datum, mailStudent, sifra);
+                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
+            }
+
+            clicked=false;
+            return new String(lbl);
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            clicked=false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+            // TODO Auto-generated method stub
+            super.fireEditingStopped();
+        }
+    }
+
 }
