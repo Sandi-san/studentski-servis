@@ -16,8 +16,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Home {
     ImageIcon ic = null;
-    static String mail_studenta;
-    static String mail_admina;
+    static String mail_studenta, mail_admina;
     static int id_o, id_p, id_k;
     static int p_Mesta;
 
@@ -81,10 +80,9 @@ public class Home {
     private JButton zbrisiButtonN;
     private JButton Btn_StudentPrijava;
     private JButton Btn_StudentReg;
+    private JButton studentSignOutButton;
 
-    public static void DobMail(String ab){
-        mail_admina = ab;
-    }
+    public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
 
     public Home(){
@@ -95,6 +93,7 @@ public class Home {
             signOutButton.setVisible(false);
             signOutButton1.setVisible(false);
             signOutButton2.setVisible(false);
+            signOutButton3.setVisible(false);
         }
         else
         {
@@ -106,6 +105,14 @@ public class Home {
             signUpButton1.setVisible(false);
             signUpButton2.setVisible(false);
             signInButton2.setVisible(false);
+        }
+        if(mail_studenta == null){
+            studentSignOutButton.setVisible(false);
+        }
+        else if(mail_studenta != null){
+            studentSignOutButton.setVisible(true);
+            Btn_StudentPrijava.setVisible(false);
+            Btn_StudentReg.setVisible(false);
         }
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
@@ -254,6 +261,8 @@ public class Home {
         postsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
+
+
                 brisanjeObjavButton.setEnabled(true);
                 posodabljanjeObjavButton.setEnabled(true);
 
@@ -571,11 +580,10 @@ public class Home {
                 textField12.setText(model.getValueAt(index,1).toString());
                 textField13.setText(model.getValueAt(index,2).toString());
 
-                String a = model.getValueAt(index,0).toString();
+                /*String a = model.getValueAt(index,0).toString();
                 String b = model.getValueAt(index,1).toString();
                 String c = model.getValueAt(index,3).toString();
-
-                //id_k = dc.Get_ID_Kraja(a, b);
+                id_k = dc.Get_ID_Kraja(a, b);*/
             }
         });
         Btn_StudentPrijava.addActionListener(actionEvent -> {
@@ -586,6 +594,7 @@ public class Home {
             new regStudenti();
             jframe.dispose();
         });
+
     }
 
     private void setTables(){
@@ -604,6 +613,7 @@ public class Home {
         }
         postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
         postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
+
 
         companyTable.setModel(new DefaultTableModel(
                 null,
@@ -641,6 +651,10 @@ public class Home {
         else if(data.length == 3){
             DefaultTableModel modelCompany = (DefaultTableModel)companyTable.getModel();
             modelCompany.addRow(data);
+        }
+        else if(data.length == 4){
+            DefaultTableModel narocanjeModel = (DefaultTableModel)narocanjeTable.getModel();
+            narocanjeModel.addRow(data);
         }
         else if(data.length == 5){
             DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
@@ -688,33 +702,36 @@ public class Home {
             int prosto = Integer.parseInt(textField6.getText());
             if(mail_studenta != null){
                 if(prosto > 0){
-
                     if(clicked)
                     {
-                        //trigger za prosta mesta treba ficat
-                        DefaultTableModel model = (DefaultTableModel)narocanjeTable.getModel();
-                        int index = narocanjeTable.getSelectedRow();
-                        //String timeStamp = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS").format(new Timestamp(System.currentTimeMillis()));
-                        String sifra = model.getValueAt(index,5).toString();
-                        //String sifra2 = textField5.getText();
-                        //DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
+                        //trigger za prosta mesta treba fiksat
+                        DefaultTableModel postsModel = (DefaultTableModel)postsTable.getModel();
+                        int index = postsTable.getSelectedRow();
+                        String naziv = postsModel.getValueAt(index,0).toString();
+                        String sifra = postsModel.getValueAt(index,5).toString();
                         java.util.Date utilDate = new java.util.Date();
                         Timestamp datum = new Timestamp(utilDate.getTime());
                         String s = datum.toString().split("\\.")[0];
                         Timestamp ts = Timestamp.valueOf(s);
-                        //System.out.println(sifra);
-                        //JOptionPane.showMessageDialog(null, ts);
-                        dc.Insert_Narocanja(ts, mail_studenta, sifra);
-                        //Object data = new Object[]{ts, mail_studenta, sifra});
-                        //model.addRow(data);
-                    }
 
+                        //JOptionPane.showMessageDialog(null, prosto);
+                        dc.Insert_Narocanja(ts, mail_studenta, sifra);
+
+                        AddRowToTables(new Object[]{ts, mail_studenta, naziv, sifra});
+
+                        /* nek problem tuki
+                        btn.setEnabled(false);
+                        prosto--;
+                        dc.Posodobi_PMesta(prosto, id_o);
+                        setTables();*/
+                    }
                     clicked=false;
                 }
                 else
                     btn.setEnabled(false);
             }
-
+            else
+                JOptionPane.showMessageDialog(null, "Niste prijavljeni");
             return new String(lbl);
         }
 

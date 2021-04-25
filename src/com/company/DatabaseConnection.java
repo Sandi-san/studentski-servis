@@ -287,22 +287,26 @@ public class DatabaseConnection {
         ArrayList <String> narocanja =  new ArrayList<>();
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT n.datum_naroc, s.ime, s.priimek, dm.naziv, dm.sifra FROM narocanja n INNER JOIN studenti s ON s.id = n.student_id INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id";
+            String sql = "SELECT n.datum_naroc, s.email, dm.naziv, dm.sifra FROM narocanja n INNER JOIN studenti s ON s.id = n.student_id INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 Timestamp naslov = rs.getTimestamp("datum_naroc");
-                String ime = rs.getString("ime");
-                String priimek = rs.getString("priimek");
+                String mail = rs.getString("email");
                 String dMesto = rs.getString("naziv");
                 String sifra = rs.getString("sifra");
 
-                narocanja.add(naslov + "," + ime + " " + priimek + "," + dMesto + "," + sifra);
+                narocanja.add(naslov + "," + mail + "," + dMesto + "," + sifra);
             }
         }
         catch (SQLException e){
             e.printStackTrace();
         }
         return narocanja;
+    }
+    public int Get_ID_Narocanja(){
+        int i = 0;
+
+        return i;
     }
 
     public ArrayList<String> Return_Kraj_Podjetja(String kraj){
@@ -346,6 +350,17 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
             String sql = "UPDATE kraji SET ime = '" + a +"', post_st = '" + b + "' WHERE id = '" + idK + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void Posodobi_PMesta(int prosto, int id_D){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE delovna_mesta SET prosta_mesta = '" + prosto +"' WHERE id = '" + id_D + "' ";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){

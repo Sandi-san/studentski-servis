@@ -240,7 +240,9 @@
                 <children>
                   <component id="87783" class="javax.swing.JTable" binding="postsTable">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <enabled value="true"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>
@@ -279,13 +281,21 @@
               </component>
               <component id="48b78" class="javax.swing.JComboBox" binding="krajiCombo">
                 <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="ab103" class="javax.swing.JButton" binding="Btn_StudentPrijava">
+              <component id="423f2" class="javax.swing.JButton" binding="studentSignOutButton" default-binding="true">
                 <constraints>
                   <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Student sign out"/>
+                </properties>
+              </component>
+              <component id="ab103" class="javax.swing.JButton" binding="Btn_StudentPrijava">
+                <constraints>
+                  <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Student sign in"/>
@@ -293,7 +303,7 @@
               </component>
               <component id="a143b" class="javax.swing.JButton" binding="Btn_StudentReg">
                 <constraints>
-                  <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Student reg"/>
