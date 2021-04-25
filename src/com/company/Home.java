@@ -588,7 +588,6 @@ public class Home {
                 Timestamp ts = Timestamp.valueOf(datum);
 
                 id_n = dc.Get_ID_Narocanja(ts, student, d_mesto, sifra);
-                System.out.println(id_n);
             }
         });
         Btn_StudentPrijava.addActionListener(actionEvent -> {
@@ -601,9 +600,22 @@ public class Home {
         });
 
         zbrisiButtonN.addActionListener(actionEvent -> {
+            if(mail_admina != null){
+                dc.Delete_Narocanje(id_n);
+                DefaultTableModel modelNarocanje = (DefaultTableModel)narocanjeTable.getModel();
+                int index = narocanjeTable.getSelectedRow();
+                modelNarocanje.removeRow(index);
 
+                textField11.setText(null);
+                textField12.setText(null);
+                textField13.setText(null);
+                textField14.setText(null);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice da izvedete to akcijo");
             zbrisiButtonN.setEnabled(false);
         });
+
     }
 
     private void setTables(){

@@ -320,6 +320,17 @@ public class DatabaseConnection {
         return i;
     }
 
+    public void Delete_Narocanje(int id){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "DELETE FROM narocanja WHERE id = '" + id + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<String> Return_Kraj_Podjetja(String kraj){
         ArrayList <String> podjetja =  new ArrayList<>();
 
