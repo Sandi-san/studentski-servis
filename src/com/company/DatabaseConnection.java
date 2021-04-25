@@ -303,9 +303,20 @@ public class DatabaseConnection {
         }
         return narocanja;
     }
-    public int Get_ID_Narocanja(){
+    public int Get_ID_Narocanja(Timestamp a, String b, String c, String d){
         int i = 0;
-
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT n.id FROM narocanja n INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id INNER JOIN studenti s ON s.id = n.student_id WHERE (n.datum_naroc = '" + a + "') AND (s.email = '" + b + "') AND (dm.naziv = '" + c + "') AND (dm.sifra = '" + d +"') ";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int id = rs.getInt(1);
+                i = id;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
         return i;
     }
 

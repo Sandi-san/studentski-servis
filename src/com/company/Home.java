@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class Home {
     ImageIcon ic = null;
     static String mail_studenta, mail_admina;
-    static int id_o, id_p, id_k;
+    static int id_o, id_p, id_k, id_n;
     static int p_Mesta;
 
     DatabaseConnection dc = new DatabaseConnection();
@@ -81,6 +81,7 @@ public class Home {
     private JButton Btn_StudentPrijava;
     private JButton Btn_StudentReg;
     private JButton studentSignOutButton;
+    private JTextField textField14;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
@@ -143,7 +144,6 @@ public class Home {
 
         });
 
-
         title.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         podjetjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         krajiLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
@@ -159,6 +159,7 @@ public class Home {
         textField11.setEditable(false);
         textField12.setEditable(false);
         textField13.setEditable(false);
+        textField14.setEditable(false);
 
         Btn_AddPost.addActionListener(actionEvent -> {
             if(mail_admina != null){
@@ -261,8 +262,6 @@ public class Home {
         postsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-
-
                 brisanjeObjavButton.setEnabled(true);
                 posodabljanjeObjavButton.setEnabled(true);
 
@@ -573,17 +572,23 @@ public class Home {
         narocanjeTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
+                zbrisiButtonN.setEnabled(true);
                 DefaultTableModel model = (DefaultTableModel)narocanjeTable.getModel();
                 int index = narocanjeTable.getSelectedRow();
 
                 textField11.setText(model.getValueAt(index,0).toString());
                 textField12.setText(model.getValueAt(index,1).toString());
                 textField13.setText(model.getValueAt(index,2).toString());
+                textField14.setText(model.getValueAt(index,3).toString());
 
-                /*String a = model.getValueAt(index,0).toString();
-                String b = model.getValueAt(index,1).toString();
-                String c = model.getValueAt(index,3).toString();
-                id_k = dc.Get_ID_Kraja(a, b);*/
+                String datum = model.getValueAt(index,0).toString();
+                String student = model.getValueAt(index,1).toString();
+                String d_mesto = model.getValueAt(index,2).toString();
+                String sifra = model.getValueAt(index,3).toString();
+                Timestamp ts = Timestamp.valueOf(datum);
+
+                id_n = dc.Get_ID_Narocanja(ts, student, d_mesto, sifra);
+                System.out.println(id_n);
             }
         });
         Btn_StudentPrijava.addActionListener(actionEvent -> {
@@ -595,6 +600,10 @@ public class Home {
             jframe.dispose();
         });
 
+        zbrisiButtonN.addActionListener(actionEvent -> {
+
+            zbrisiButtonN.setEnabled(false);
+        });
     }
 
     private void setTables(){
@@ -743,7 +752,6 @@ public class Home {
 
         @Override
         protected void fireEditingStopped() {
-            // TODO Auto-generated method stub
             super.fireEditingStopped();
         }
     }
