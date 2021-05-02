@@ -3,21 +3,17 @@ package com.company;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 
 public class Home {
     ImageIcon ic = null;
-    static String mail_admina;
-    static int id_o, id_p, id_k;
+    static String mail_studenta, mail_admina;
+    static int id_o, id_p, id_k, id_n;
+    static int p_Mesta;
+
     DatabaseConnection dc = new DatabaseConnection();
 
     private JPanel homePanel;
@@ -47,9 +43,6 @@ public class Home {
     private JTabbedPane JTabPane1;
     private JLabel podjetjeLabel;
     private JTextField textField7;
-    private JButton signOutButton1;
-    private JButton signInButton;
-    private JButton signUpButton;
     private JComboBox comboBox1;
     private JTextField textField8;
     private JComboBox comboBox2;
@@ -58,9 +51,6 @@ public class Home {
     private JButton deleteButtonC;
     private JTable companyTable;
     private JLabel krajiLabel;
-    private JButton signOutButton2;
-    private JButton signInButton1;
-    private JButton signUpButton1;
     private JTextField textField9;
     private JButton dodajButtonK;
     private JButton zbrisiButtonK;
@@ -70,18 +60,16 @@ public class Home {
     private JLabel narocanjeLabel;
     private JTextField textField11;
     private JTextField textField12;
-    private JButton signOutButton3;
-    private JButton signInButton2;
-    private JButton signUpButton2;
     private JTextField textField13;
-    private JTable table1;
+    private JTable narocanjeTable;
     private JButton zbrisiButtonN;
     private JButton Btn_StudentPrijava;
     private JButton Btn_StudentReg;
+    private JButton studentSignOutButton;
+    private JTextField textField14;
 
-    public static void DobMail(String ab){
-        mail_admina = ab;
-    }
+    public static void DobMail(String ab){ mail_admina = ab; }
+    public static void MailStudenta(String a){mail_studenta = a;}
 
     public Home(){
         setTables();
@@ -89,19 +77,19 @@ public class Home {
         display.setVisible(false);
         if(mail_admina == null){
             signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
         }
         else
         {
             Btn_Prijava.setVisible(false);
             Btn_Reg.setVisible(false);
-            signInButton.setVisible(false);
-            signUpButton.setVisible(false);
-            signInButton1.setVisible(false);
-            signUpButton1.setVisible(false);
-            signUpButton2.setVisible(false);
-            signInButton2.setVisible(false);
+        }
+
+        if(mail_studenta == null)
+            studentSignOutButton.setVisible(false);
+        else if(mail_studenta != null){
+            studentSignOutButton.setVisible(true);
+            Btn_StudentPrijava.setVisible(false);
+            Btn_StudentReg.setVisible(false);
         }
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
@@ -132,7 +120,6 @@ public class Home {
 
         });
 
-
         title.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         podjetjeLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         krajiLabel.setFont(new Font("TimesRoman", Font.PLAIN, 30));
@@ -144,6 +131,11 @@ public class Home {
         jframe.pack();
         jframe.setSize(1000, 700);
         jframe.setVisible(true);
+
+        textField11.setEditable(false);
+        textField12.setEditable(false);
+        textField13.setEditable(false);
+        textField14.setEditable(false);
 
         Btn_AddPost.addActionListener(actionEvent -> {
             if(mail_admina != null){
@@ -272,6 +264,8 @@ public class Home {
                 String kraj = model.getValueAt(index,7).toString();
                 String podjetje = model.getValueAt(index,8).toString();
 
+                p_Mesta = dc.Return_ProstaMesta(sifra);
+
                 id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
             }
         });
@@ -305,17 +299,7 @@ public class Home {
             mail_admina = null;
             Btn_Prijava.setVisible(true);
             Btn_Reg.setVisible(true);
-            signUpButton1.setVisible(true);
-            signInButton1.setVisible(true);
-            signInButton.setVisible(true);
-            signUpButton.setVisible(true);
-            signInButton2.setVisible(true);
-            signUpButton2.setVisible(true);
-
             signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
         });
 
         Btn_Reg.addActionListener(actionEvent -> {
@@ -343,32 +327,7 @@ public class Home {
             else
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
-        signInButton.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new prijava();
-        });
 
-        signUpButton.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new registracija();
-        });
-
-        signOutButton1.addActionListener(actionEvent -> {
-            mail_admina = null;
-            Btn_Prijava.setVisible(true);
-            Btn_Reg.setVisible(true);
-            signUpButton1.setVisible(true);
-            signInButton1.setVisible(true);
-            signInButton.setVisible(true);
-            signUpButton.setVisible(true);
-            signInButton2.setVisible(true);
-            signUpButton2.setVisible(true);
-
-            signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
-        });
 
         companyTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -458,32 +417,7 @@ public class Home {
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
 
-        signUpButton1.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new registracija();
-        });
 
-        signInButton1.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new prijava();
-        });
-
-        signOutButton2.addActionListener(actionEvent -> {
-            mail_admina = null;
-            Btn_Prijava.setVisible(true);
-            Btn_Reg.setVisible(true);
-            signUpButton1.setVisible(true);
-            signInButton1.setVisible(true);
-            signInButton.setVisible(true);
-            signUpButton.setVisible(true);
-            signInButton2.setVisible(true);
-            signUpButton2.setVisible(true);
-
-            signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
-        });
 
         krajiTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -541,14 +475,59 @@ public class Home {
 
         });
 
-        signInButton2.addActionListener(actionEvent -> {
+        narocanjeTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                zbrisiButtonN.setEnabled(true);
+                DefaultTableModel model = (DefaultTableModel)narocanjeTable.getModel();
+                int index = narocanjeTable.getSelectedRow();
+
+                textField11.setText(model.getValueAt(index,0).toString());
+                textField12.setText(model.getValueAt(index,1).toString());
+                textField13.setText(model.getValueAt(index,2).toString());
+                textField14.setText(model.getValueAt(index,3).toString());
+
+                String datum = model.getValueAt(index,0).toString();
+                String student = model.getValueAt(index,1).toString();
+                String d_mesto = model.getValueAt(index,2).toString();
+                String sifra = model.getValueAt(index,3).toString();
+                Timestamp ts = Timestamp.valueOf(datum);
+
+                id_n = dc.Get_ID_Narocanja(ts, student, d_mesto, sifra);
+            }
+        });
+        Btn_StudentPrijava.addActionListener(actionEvent -> {
+            new prijavaStudenti();
             jframe.dispose();
-            new prijava();
+        });
+        Btn_StudentReg.addActionListener(actionEvent -> {
+            new regStudenti();
+            jframe.dispose();
         });
 
-        signUpButton2.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new registracija();
+        zbrisiButtonN.addActionListener(actionEvent -> {
+            if(mail_admina != null){
+                dc.Delete_Narocanje(id_n);
+                DefaultTableModel modelNarocanje = (DefaultTableModel)narocanjeTable.getModel();
+                int index = narocanjeTable.getSelectedRow();
+                modelNarocanje.removeRow(index);
+
+                textField11.setText(null);
+                textField12.setText(null);
+                textField13.setText(null);
+                textField14.setText(null);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice da izvedete to akcijo");
+
+            zbrisiButtonN.setEnabled(false);
+        });
+
+        studentSignOutButton.addActionListener(actionEvent -> {
+            mail_studenta = null;
+            studentSignOutButton.setVisible(false);
+            Btn_StudentReg.setVisible(true);
+            Btn_StudentPrijava.setVisible(true);
         });
     }
 
@@ -556,7 +535,7 @@ public class Home {
         String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
-        String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto"};
+        String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto", "Šifra"};
 
         postsTable.setModel(new DefaultTableModel(
                 null,
@@ -568,6 +547,7 @@ public class Home {
         }
         postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
         postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
+
 
         companyTable.setModel(new DefaultTableModel(
                 null,
@@ -586,6 +566,15 @@ public class Home {
         for(String line:dc.Return_Vse_Kraje()){
             modelKraji.addRow(line.split(","));
         }
+
+        narocanjeTable.setModel(new DefaultTableModel(
+                null,
+                columnsNarocanja
+        ));
+        DefaultTableModel modelNarocanja = (DefaultTableModel)narocanjeTable.getModel();
+        for(String line:dc.Return_Narocanja()){
+            modelNarocanja.addRow(line.split(","));
+        }
     }
 
     private void AddRowToTables(Object[] data){
@@ -596,6 +585,10 @@ public class Home {
         else if(data.length == 3){
             DefaultTableModel modelCompany = (DefaultTableModel)companyTable.getModel();
             modelCompany.addRow(data);
+        }
+        else if(data.length == 4){
+            DefaultTableModel narocanjeModel = (DefaultTableModel)narocanjeTable.getModel();
+            narocanjeModel.addRow(data);
         }
         else if(data.length == 5){
             DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
@@ -623,11 +616,12 @@ public class Home {
 
         public ButtonEditor(JTextField txt) {
             super(txt);
+            txt.setEditable(false);
 
             btn=new JButton();
             btn.setOpaque(true);
 
-            btn.addActionListener(e -> fireEditingStopped());
+            btn.addActionListener(actionEvent -> fireEditingStopped());
         }
 
         @Override
@@ -640,35 +634,49 @@ public class Home {
 
         @Override
         public Object getCellEditorValue() {
-            if(clicked)
-            {
-                //pošl to pa mail od študenta funkciji za insertanje naročanj v DatabaseConnection.java
-                String sifra = textField5.getText();
-                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                java.util.Date utilDate = new java.util.Date();
-                Timestamp s = new Timestamp(utilDate.getTime());
-                JOptionPane.showMessageDialog(null, s);
-                /*java.util.Date date = new java.util.Date();
-                Timestamp ts=new Timestamp(date.getTime());
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
-                //JOptionPane.showMessageDialog(null, s);
-                //dc.Insert_Narocanja(datum, mailStudent, sifra);
-                //JOptionPane.showMessageDialog(btn, lbl+" Clicked");
-            }
+            int prosto = Integer.parseInt(textField6.getText());
+            if(mail_studenta != null){
+                if(prosto > 0){
+                    if(clicked)
+                    {
+                        //trigger za prosta mesta treba fiksat
+                        DefaultTableModel postsModel = (DefaultTableModel)postsTable.getModel();
+                        int index = postsTable.getSelectedRow();
+                        String naziv = postsModel.getValueAt(index,0).toString();
+                        String sifra = postsModel.getValueAt(index,5).toString();
+                        java.util.Date utilDate = new java.util.Date();
+                        Timestamp datum = new Timestamp(utilDate.getTime());
+                        String s = datum.toString().split("\\.")[0];
+                        Timestamp ts = Timestamp.valueOf(s);
 
-            clicked=false;
+                        //JOptionPane.showMessageDialog(null, prosto);
+                        dc.Insert_Narocanja(ts, mail_studenta, sifra);
+
+                        AddRowToTables(new Object[]{ts, mail_studenta, naziv, sifra});
+                        //clicked = false;
+                        //btn.setEnabled(false);
+                        /* nek problem tuki
+                        btn.setEnabled(false);
+                        prosto--;
+                        dc.Posodobi_PMesta(prosto, id_o);
+                        setTables();*/
+                    }
+                    clicked = false;
+                }
+
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Niste prijavljeni");
             return new String(lbl);
         }
 
         @Override
         public boolean stopCellEditing() {
-            clicked=false;
             return super.stopCellEditing();
         }
 
         @Override
         protected void fireEditingStopped() {
-            // TODO Auto-generated method stub
             super.fireEditingStopped();
         }
     }

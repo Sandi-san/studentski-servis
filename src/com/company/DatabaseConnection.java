@@ -158,13 +158,11 @@ public class DatabaseConnection {
                 String mail = rs.getString("email");
                 String pass = rs.getString("pass");
 
-                //System.out.println("Iz baze: " + mail + " " + pass);
-
                 if (mail.equals(email))
                 {
                     if (pass.equals(geslo))
                     {
-                        //System.out.println("JE TRUE KURBA");
+                        Home.MailStudenta(mail);
                         isTrue = true;
                     }
                 }
@@ -220,7 +218,22 @@ public class DatabaseConnection {
         }
         return kraji;
     }
-
+    public int Return_ProstaMesta(String a){
+        int i = 1;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM st_delovnih_mest_v_kraju('" + a + "')";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int prosto = rs.getInt(1);
+                i = prosto;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
     public ArrayList<String> Return_Podjetja(){
         ArrayList <String> podjetja = new ArrayList<>();
         try(Connection connection = Connect()){
@@ -262,13 +275,62 @@ public class DatabaseConnection {
     public void Insert_Narocanja(Timestamp a, String b, String c){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "INSERT INTO narocanja(datum, student_id, delovno_mesto_id) VALUES('" + a + "', (SELECT id FROM studenti WHERE email = '" + b +"'), (SELECT id FROM delovna_mesta WHERE sifra = '" + c +"')) ";
+            String sql = "INSERT INTO narocanja(datum_naroc, student_id, delovno_mesto_id) VALUES('" + a + "', (SELECT id FROM studenti WHERE email = '" + b +"'), (SELECT id FROM delovna_mesta WHERE sifra = '" + c +"')) ";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
             e.printStackTrace();
         }
     }
+
+    public ArrayList<String> Return_Narocanja(){
+        ArrayList <String> narocanja =  new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT n.datum_naroc, s.email, dm.naziv, dm.sifra FROM narocanja n INNER JOIN studenti s ON s.id = n.student_id INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                Timestamp naslov = rs.getTimestamp("datum_naroc");
+                String mail = rs.getString("email");
+                String dMesto = rs.getString("naziv");
+                String sifra = rs.getString("sifra");
+
+                narocanja.add(naslov + "," + mail + "," + dMesto + "," + sifra);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return narocanja;
+    }
+    public int Get_ID_Narocanja(Timestamp a, String b, String c, String d){
+        int i = 0;
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT n.id FROM narocanja n INNER JOIN delovna_mesta dm ON dm.id = n.delovno_mesto_id INNER JOIN studenti s ON s.id = n.student_id WHERE (n.datum_naroc = '" + a + "') AND (s.email = '" + b + "') AND (dm.naziv = '" + c + "') AND (dm.sifra = '" + d +"') ";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int id = rs.getInt(1);
+                i = id;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    public void Delete_Narocanje(int id){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "DELETE FROM narocanja WHERE id = '" + id + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<String> Return_Kraj_Podjetja(String kraj){
         ArrayList <String> podjetja =  new ArrayList<>();
 
@@ -310,6 +372,17 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
             String sql = "UPDATE kraji SET ime = '" + a +"', post_st = '" + b + "' WHERE id = '" + idK + "' ";
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void Posodobi_PMesta(int prosto, int id_D){
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE delovna_mesta SET prosta_mesta = '" + prosto +"' WHERE id = '" + id_D + "' ";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
