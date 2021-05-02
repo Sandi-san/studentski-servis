@@ -72,12 +72,14 @@ public class Home {
     private JButton Btn_StudentReg;
     private JButton studentSignOutButton;
     private JTextField textField14;
+    private JButton spremeniSliko;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
 
     public Home(){
         setTables();
+        spremeniSliko.setVisible(false);
         slika2.setVisible(false);
         display.setVisible(false);
         if(mail_admina == null){
@@ -112,15 +114,15 @@ public class Home {
             if(ime.equals("Vse")){
                 for(String line:dc.Return_Objave()){
                     model.addRow(line.split(","));
-                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
-                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
+                    postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
                 }
             }
             else{
                 for(String line:dc.Return_Kraj_Objava(ime)){
                     model.addRow(line.split(","));
-                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
-                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
+                    postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
                 }
             }
 
@@ -157,9 +159,7 @@ public class Home {
                 String name = mail_admina;
                 String n = "Naroči se";
 
-
-                //boolean valid =  Stream.of(firstname, lastname, amount, timespan, iban).allMatch(StringUtils::isNotBlank);
-                if(naziv.isEmpty() || desc.isEmpty() || placa.isEmpty() || trajanje.isEmpty() || d.isEmpty() || sifra.isEmpty() || textField6.toString().isEmpty() || ic == null)
+                if(naziv == "" || desc== "" || placa== "" || trajanje== "" || d== "" || sifra== "" || textField6.toString()== "" || ic == null)
                     JOptionPane.showMessageDialog(null, "Moraš vse vnesti");
                 else{
                     DatabaseConnection db = new DatabaseConnection();
@@ -308,7 +308,7 @@ public class Home {
         });
 
         dodajSlikoButton.addActionListener(actionEvent -> {
-            JFrame fr = new JFrame("Open file");
+            JFrame fr = new JFrame("Odpri sliko");
             FileDialog fd = new FileDialog(fr, "Naloži sliko", FileDialog.LOAD);
             fd.setDirectory("C:\\");
             fd.setFile("*.jpg;*.png");
@@ -327,6 +327,7 @@ public class Home {
                 slika2.setVisible(true);
                 slika.setVisible(false);
                 dodajSlikoButton.setVisible(false);
+                spremeniSliko.setVisible(true);
                 display.setVisible(true);
             }
         });
@@ -452,8 +453,6 @@ public class Home {
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
 
-
-
         krajiTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -564,10 +563,28 @@ public class Home {
             Btn_StudentReg.setVisible(true);
             Btn_StudentPrijava.setVisible(true);
         });
+        spremeniSliko.addActionListener(actionEvent -> {
+            JFrame fr = new JFrame("Odpri sliko");
+            FileDialog fd = new FileDialog(fr, "Naloži sliko", FileDialog.LOAD);
+            fd.setDirectory(f.toString());
+            fd.setFile("*.jpg;*.png");
+
+            fd.setVisible(true);
+            filename = fd.getFile();
+            if (filename == null)
+                JOptionPane.showMessageDialog(null,"Preklicali ste izbiro");
+            else{
+                String path = fd.getDirectory() + fd.getFile();
+                f = new File(path); //pot do slike
+                ic = new ImageIcon(f.toString());
+                Image newimg = ic.getImage().getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
+                display.setIcon(new ImageIcon(newimg));
+            }
+        });
     }
 
     private void setTables(){
-        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje", "Slika"};
+        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Slika", "Naročanje"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
         String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto", "Šifra"};
@@ -580,8 +597,8 @@ public class Home {
         for(String line:dc.Return_Objave()){
             modelPosts.addRow(line.split(","));
         }
-        postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
-        postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
+        postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
+        postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
 
 
         companyTable.setModel(new DefaultTableModel(

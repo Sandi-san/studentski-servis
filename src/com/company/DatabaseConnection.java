@@ -127,13 +127,10 @@ public class DatabaseConnection {
                 String mail = rs.getString("email");
                 String pass = rs.getString("pass");
 
-                //System.out.println("Iz baze: " + mail + " " + pass);
-
                 if (mail.equals(email))
                 {
                     if (pass.equals(geslo))
                     {
-                        //System.out.println("JE TRUE KURBA");
                         isTrue = true;
                     }
                 }
@@ -181,7 +178,7 @@ public class DatabaseConnection {
 
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje,dm.delovnik, dm.sifra, dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
+            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje,dm.delovnik, dm.sifra, dm.prosta_mesta,k.ime,p.naslov, dm.slika_dmesta FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
@@ -193,8 +190,13 @@ public class DatabaseConnection {
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
+                String Slika = null;
+                if(rs.getString("slika_dmesta") != null)
+                    Slika = rs.getString("slika_dmesta");
+                else
+                    Slika = "Ni slike";
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + e + "," + g + "," + Plac + "," + Kraj + "," + Podjetje +  "," +"Naroči se");
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + e + "," + g + "," + Plac + "," + Kraj + "," + Podjetje +  "," + Slika + "," + "Naroči se");
             }
         }
         catch(SQLException e){
@@ -448,7 +450,7 @@ public class DatabaseConnection {
 
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje, dm.delovnik, dm.sifra,dm.prosta_mesta,k.ime,p.naslov FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id WHERE (k.ime = '" + kraj + "') ";
+            String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje, dm.delovnik, dm.sifra,dm.prosta_mesta,k.ime,p.naslov, dm.slika_dmesta FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id WHERE (k.ime = '" + kraj + "') ";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 String Naziv = rs.getString("naziv");
@@ -460,8 +462,13 @@ public class DatabaseConnection {
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
+                String Slika = null;
+                if(rs.getString("slika_dmesta") != null)
+                    Slika = rs.getString("slika_dmesta");
+                else
+                    Slika = "Ni slike";
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + d + "," + s + "," + Plac + "," + Kraj + "," + Podjetje);
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + d + "," + s + "," + Plac + "," + Kraj + "," + Podjetje + "," + Slika + "," + "Naroči se");
             }
         }
         catch (SQLException e){
