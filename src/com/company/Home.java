@@ -3,16 +3,10 @@ package com.company;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 
 public class Home {
     ImageIcon ic = null;
@@ -49,9 +43,6 @@ public class Home {
     private JTabbedPane JTabPane1;
     private JLabel podjetjeLabel;
     private JTextField textField7;
-    private JButton signOutButton1;
-    private JButton signInButton;
-    private JButton signUpButton;
     private JComboBox comboBox1;
     private JTextField textField8;
     private JComboBox comboBox2;
@@ -60,9 +51,6 @@ public class Home {
     private JButton deleteButtonC;
     private JTable companyTable;
     private JLabel krajiLabel;
-    private JButton signOutButton2;
-    private JButton signInButton1;
-    private JButton signUpButton1;
     private JTextField textField9;
     private JButton dodajButtonK;
     private JButton zbrisiButtonK;
@@ -72,9 +60,6 @@ public class Home {
     private JLabel narocanjeLabel;
     private JTextField textField11;
     private JTextField textField12;
-    private JButton signOutButton3;
-    private JButton signInButton2;
-    private JButton signUpButton2;
     private JTextField textField13;
     private JTable narocanjeTable;
     private JButton zbrisiButtonN;
@@ -92,24 +77,15 @@ public class Home {
         display.setVisible(false);
         if(mail_admina == null){
             signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
         }
         else
         {
             Btn_Prijava.setVisible(false);
             Btn_Reg.setVisible(false);
-            signInButton.setVisible(false);
-            signUpButton.setVisible(false);
-            signInButton1.setVisible(false);
-            signUpButton1.setVisible(false);
-            signUpButton2.setVisible(false);
-            signInButton2.setVisible(false);
         }
-        if(mail_studenta == null){
+
+        if(mail_studenta == null)
             studentSignOutButton.setVisible(false);
-        }
         else if(mail_studenta != null){
             studentSignOutButton.setVisible(true);
             Btn_StudentPrijava.setVisible(false);
@@ -323,17 +299,7 @@ public class Home {
             mail_admina = null;
             Btn_Prijava.setVisible(true);
             Btn_Reg.setVisible(true);
-            signUpButton1.setVisible(true);
-            signInButton1.setVisible(true);
-            signInButton.setVisible(true);
-            signUpButton.setVisible(true);
-            signInButton2.setVisible(true);
-            signUpButton2.setVisible(true);
-
             signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
         });
 
         Btn_Reg.addActionListener(actionEvent -> {
@@ -361,32 +327,7 @@ public class Home {
             else
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
-        signInButton.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new prijava();
-        });
 
-        signUpButton.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new registracija();
-        });
-
-        signOutButton1.addActionListener(actionEvent -> {
-            mail_admina = null;
-            Btn_Prijava.setVisible(true);
-            Btn_Reg.setVisible(true);
-            signUpButton1.setVisible(true);
-            signInButton1.setVisible(true);
-            signInButton.setVisible(true);
-            signUpButton.setVisible(true);
-            signInButton2.setVisible(true);
-            signUpButton2.setVisible(true);
-
-            signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
-        });
 
         companyTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -476,32 +417,7 @@ public class Home {
                 JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
         });
 
-        signUpButton1.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new registracija();
-        });
 
-        signInButton1.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new prijava();
-        });
-
-        signOutButton2.addActionListener(actionEvent -> {
-            mail_admina = null;
-            Btn_Prijava.setVisible(true);
-            Btn_Reg.setVisible(true);
-            signUpButton1.setVisible(true);
-            signInButton1.setVisible(true);
-            signInButton.setVisible(true);
-            signUpButton.setVisible(true);
-            signInButton2.setVisible(true);
-            signUpButton2.setVisible(true);
-
-            signOutButton.setVisible(false);
-            signOutButton1.setVisible(false);
-            signOutButton2.setVisible(false);
-            signOutButton3.setVisible(false);
-        });
 
         krajiTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -559,16 +475,6 @@ public class Home {
 
         });
 
-        signInButton2.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new prijava();
-        });
-
-        signUpButton2.addActionListener(actionEvent -> {
-            jframe.dispose();
-            new registracija();
-        });
-
         narocanjeTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -613,9 +519,16 @@ public class Home {
             }
             else
                 JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice da izvedete to akcijo");
+
             zbrisiButtonN.setEnabled(false);
         });
 
+        studentSignOutButton.addActionListener(actionEvent -> {
+            mail_studenta = null;
+            studentSignOutButton.setVisible(false);
+            Btn_StudentReg.setVisible(true);
+            Btn_StudentPrijava.setVisible(true);
+        });
     }
 
     private void setTables(){
@@ -703,11 +616,12 @@ public class Home {
 
         public ButtonEditor(JTextField txt) {
             super(txt);
+            txt.setEditable(false);
 
             btn=new JButton();
             btn.setOpaque(true);
 
-            btn.addActionListener(e -> fireEditingStopped());
+            btn.addActionListener(actionEvent -> fireEditingStopped());
         }
 
         @Override
@@ -739,17 +653,17 @@ public class Home {
                         dc.Insert_Narocanja(ts, mail_studenta, sifra);
 
                         AddRowToTables(new Object[]{ts, mail_studenta, naziv, sifra});
-
+                        //clicked = false;
+                        //btn.setEnabled(false);
                         /* nek problem tuki
                         btn.setEnabled(false);
                         prosto--;
                         dc.Posodobi_PMesta(prosto, id_o);
                         setTables();*/
                     }
-                    clicked=false;
+                    clicked = false;
                 }
-                else
-                    btn.setEnabled(false);
+
             }
             else
                 JOptionPane.showMessageDialog(null, "Niste prijavljeni");
@@ -758,7 +672,6 @@ public class Home {
 
         @Override
         public boolean stopCellEditing() {
-            clicked=false;
             return super.stopCellEditing();
         }
 
