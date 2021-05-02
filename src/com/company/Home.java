@@ -3,6 +3,7 @@ package com.company;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -91,6 +92,7 @@ public class Home {
             Btn_StudentPrijava.setVisible(false);
             Btn_StudentReg.setVisible(false);
         }
+
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
         dc.Return_Kraje().forEach((e) -> krajiCombo.addItem(e));
@@ -149,10 +151,25 @@ public class Home {
                 String kraj = krajCombo.getSelectedItem().toString();
                 String podjetje = podjetjeCombo.getSelectedItem().toString();
                 String name = mail_admina;
+                String n = "Naroči se";
 
                 DatabaseConnection db = new DatabaseConnection();
                 db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name);
-                AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje});
+                if(ic != null){
+                    AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, n, display});
+                    postsTable.getColumn("Slika").setCellRenderer(new TableCellRenderer() {
+                        @Override
+                        public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
+                            TableColumn cm = jTable.getColumn("Slika");
+                            cm.setMaxWidth(60);
+                            jTable.setRowHeight(60);
+                            return (Component) o;
+                        }
+                    });
+                }
+                else if(ic == null)
+                    AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, n});
+
 
                 textArea1.setText("");
                 textField1.setText("");
@@ -282,12 +299,13 @@ public class Home {
                 JOptionPane.showMessageDialog(null,"Preklicali ste izbiro");
             else{
                 String path = fd.getDirectory() + fd.getFile();
-                File f = new File(path);
+                File f = new File(path); //pot do slike
+
                 ic = new ImageIcon(f.toString());
-                Image image = ic.getImage();
-                Image newimg = image.getScaledInstance(290, 220,  java.awt.Image.SCALE_SMOOTH);
-                ic = new ImageIcon(newimg);
-                display.setIcon(ic);
+                //Image image = ic.getImage();
+                Image newimg = ic.getImage().getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
+                display.setIcon(new ImageIcon(newimg));
+                //JOptionPane.showMessageDialog(null, f);
                 dodajSlikoButton.setVisible(false);
                 slika2.setVisible(true);
                 slika.setVisible(false);
@@ -532,7 +550,7 @@ public class Home {
     }
 
     private void setTables(){
-        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje"};
+        String[] columnsPosts = {"Naziv", "Opis", "Plača", "Trajanje", "Delovnik", "Šifra", "Prosto", "Kraj", "Podjetje", "Naročanje", "Slika"};
         String[] columnsCompany = {"Naslov", "Telefon", "Kraj"};
         String[] columnsKraji = {"Ime", "Poštna številka"};
         String[] columnsNarocanja = {"Datum", "Študent", "Delovno mesto", "Šifra"};
@@ -590,7 +608,11 @@ public class Home {
             DefaultTableModel narocanjeModel = (DefaultTableModel)narocanjeTable.getModel();
             narocanjeModel.addRow(data);
         }
-        else if(data.length == 5){
+        else if(data.length == 10){
+            DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
+            modelPosts.addRow(data);
+        }
+        else if(data.length == 11){
             DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
             modelPosts.addRow(data);
         }

@@ -81,6 +81,7 @@ public class DatabaseConnection {
                 String ime = rs.getString("ime");
                 int post_st = rs.getInt("post_st");
                 kraji.add(ime + "," + post_st);
+                //System.out.println(ime);
             }
         }
         catch (SQLException e){
@@ -211,6 +212,7 @@ public class DatabaseConnection {
             while(rs.next()){
                 String ime = rs.getString("ime");
                 kraji.add(ime);
+                //System.out.println(ime);
             }
         }
         catch(SQLException e){
