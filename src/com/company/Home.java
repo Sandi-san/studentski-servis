@@ -1,16 +1,20 @@
 package com.company;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.sql.Timestamp;
 
 public class Home {
+    String filename = null;
     ImageIcon ic = null;
+    File f = null;
     static String mail_studenta, mail_admina;
     static int id_o, id_p, id_k, id_n;
     static int p_Mesta;
@@ -153,10 +157,29 @@ public class Home {
                 String name = mail_admina;
                 String n = "Naroči se";
 
-                DatabaseConnection db = new DatabaseConnection();
-                db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name);
-                if(ic != null){
+
+                //boolean valid =  Stream.of(firstname, lastname, amount, timespan, iban).allMatch(StringUtils::isNotBlank);
+                if(naziv.isEmpty() || desc.isEmpty() || placa.isEmpty() || trajanje.isEmpty() || d.isEmpty() || sifra.isEmpty() || textField6.toString().isEmpty() || ic == null)
+                    JOptionPane.showMessageDialog(null, "Moraš vse vnesti");
+                else{
+                    DatabaseConnection db = new DatabaseConnection();
+                    db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name);
                     AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, n, display});
+                    File saveFile = new File("src/images/"+ filename);
+
+                    try {
+                        if(filename.toLowerCase().endsWith(".jpg")){
+                            BufferedImage originalImage = ImageIO.read(f);
+                            ImageIO.write(originalImage, "jpg", saveFile);
+                        }
+                        else if(filename.toLowerCase().endsWith(".png")){
+                            BufferedImage originalImage = ImageIO.read(f);
+                            ImageIO.write(originalImage, "png", saveFile);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     postsTable.getColumn("Slika").setCellRenderer(new TableCellRenderer() {
                         @Override
                         public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
@@ -167,9 +190,6 @@ public class Home {
                         }
                     });
                 }
-                else if(ic == null)
-                    AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, n});
-
 
                 textArea1.setText("");
                 textField1.setText("");
@@ -294,18 +314,15 @@ public class Home {
             fd.setFile("*.jpg;*.png");
 
             fd.setVisible(true);
-            String filename = fd.getFile();
+            filename = fd.getFile();
             if (filename == null)
                 JOptionPane.showMessageDialog(null,"Preklicali ste izbiro");
             else{
                 String path = fd.getDirectory() + fd.getFile();
-                File f = new File(path); //pot do slike
-
+                f = new File(path); //pot do slike
                 ic = new ImageIcon(f.toString());
-                //Image image = ic.getImage();
                 Image newimg = ic.getImage().getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
                 display.setIcon(new ImageIcon(newimg));
-                //JOptionPane.showMessageDialog(null, f);
                 dodajSlikoButton.setVisible(false);
                 slika2.setVisible(true);
                 slika.setVisible(false);
