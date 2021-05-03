@@ -1,14 +1,25 @@
 package com.company;
 
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import java.awt.Color;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 
 public class Home {
@@ -73,31 +84,48 @@ public class Home {
     private JButton studentSignOutButton;
     private JTextField textField14;
     private JButton spremeniSliko;
+    private JButton btn_ShowChart;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
 
-    public Home(){
+    public Home() {
         setTables();
         spremeniSliko.setVisible(false);
         slika2.setVisible(false);
         display.setVisible(false);
-        if(mail_admina == null){
+        if (mail_admina == null) {
             signOutButton.setVisible(false);
-        }
-        else
-        {
+        } else {
             Btn_Prijava.setVisible(false);
             Btn_Reg.setVisible(false);
         }
 
-        if(mail_studenta == null)
+        if (mail_studenta == null)
             studentSignOutButton.setVisible(false);
-        else if(mail_studenta != null){
+        else if (mail_studenta != null) {
             studentSignOutButton.setVisible(true);
             Btn_StudentPrijava.setVisible(false);
             Btn_StudentReg.setVisible(false);
         }
+
+        btn_ShowChart.addActionListener(actionEvent -> {
+        DefaultCategoryDataset chartset = new DefaultCategoryDataset();
+            chartset.setValue(20, "test", "neki");
+            chartset.setValue(24, "test", "un" );
+            chartset.setValue(60, "test", "drug" );
+            chartset.setValue(26, "test", "krneki" );
+
+            JFreeChart jchart = ChartFactory.createBarChart("Graf",
+                    "nameneki", "drug neki", chartset, PlotOrientation.VERTICAL,
+                    true, true, false);
+            CategoryPlot plot = jchart.getCategoryPlot();
+            plot.setRangeGridlinePaint(Color.red);
+
+            ChartFrame chartfrm = new ChartFrame("Chart name", jchart, true);
+            chartfrm.setVisible(true);
+            chartfrm.setSize(500, 400);
+        });
 
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
@@ -735,6 +763,7 @@ public class Home {
         protected void fireEditingStopped() {
             super.fireEditingStopped();
         }
+
     }
 
 }
