@@ -1,5 +1,14 @@
 package com.company;
 
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import java.awt.Color;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,6 +19,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Timestamp;
+import java.util.*;
 
 public class Home {
     String filename = null;
@@ -73,6 +83,8 @@ public class Home {
     private JButton studentSignOutButton;
     private JTextField textField14;
     private JButton spremeniSliko;
+    private JLabel slikaIzBaze;
+    private JButton btn_ShowChart;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
@@ -82,6 +94,8 @@ public class Home {
         spremeniSliko.setVisible(false);
         slika2.setVisible(false);
         display.setVisible(false);
+        slikaIzBaze.setVisible(false);
+
         if(mail_admina == null){
             signOutButton.setVisible(false);
         }
@@ -101,6 +115,7 @@ public class Home {
 
         krajiCombo.addItem("Vse");
         comboBox1.addItem("Vse");
+
         dc.Return_Kraje().forEach((e) -> krajiCombo.addItem(e));
         dc.Return_Kraje().forEach((e) -> krajCombo.addItem(e));
         dc.Return_Kraje().forEach((e) -> comboBox2.addItem(e));
@@ -111,7 +126,7 @@ public class Home {
             String ime = krajiCombo.getSelectedItem().toString();
             DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
             model.setRowCount(0);
-            if(ime.equals("Vse")){
+            /*if(ime.equals("Vse")){
                 for(String line:dc.Return_Objave()){
                     model.addRow(line.split(","));
                     postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
@@ -124,7 +139,7 @@ public class Home {
                     postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
                     postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
                 }
-            }
+            }*/
 
         });
 
@@ -137,7 +152,8 @@ public class Home {
         jframe.setContentPane(homePanel);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.pack();
-        jframe.setSize(1000, 700);
+        jframe.setSize(1200, 900);
+        //jframe.setSize(1500, 1000);
         jframe.setVisible(true);
 
         textField11.setEditable(false);
@@ -163,10 +179,10 @@ public class Home {
                     JOptionPane.showMessageDialog(null, "Moraš vse vnesti");
                 else{
                     DatabaseConnection db = new DatabaseConnection();
-                    db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name);
-                    AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, n, display});
-                    File saveFile = new File("src/images/"+ filename);
 
+                    //infinite errors ker iz baze vzamem pot panisem convertu pot v actual sliko
+                    //AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, display, n});
+                    File saveFile = new File("src/images/"+ filename);
                     try {
                         if(filename.toLowerCase().endsWith(".jpg")){
                             BufferedImage originalImage = ImageIO.read(f);
@@ -189,6 +205,7 @@ public class Home {
                             return (Component) o;
                         }
                     });
+                    db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name, saveFile.toString());
                 }
 
                 textArea1.setText("");
@@ -260,9 +277,9 @@ public class Home {
                     //postsTable.getSelectionModel().clearSelection();
                     DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
                     model.setRowCount(0);
-                    for(String line:dc.Return_Objave()){
+                    /*for(String line:dc.Return_Objave()){
                         modelPosts.addRow(line.split(","));
-                    }
+                    }*/
                     postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
                     postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
                     posodabljanjeObjavButton.setEnabled(false);
@@ -355,7 +372,7 @@ public class Home {
                 String kraj = comboBox2.getSelectedItem().toString();
 
                 dc.AddCompany(naslov, telefon, kraj);
-                AddRowToTables(new Object[]{naslov, telefon, kraj});
+                //AddRowToTables(new Object[]{naslov, telefon, kraj});
 
                 textField7.setText("");
                 textField8.setText("");
@@ -444,7 +461,7 @@ public class Home {
                 int posta = Integer.parseInt(textField10.getText());
 
                 dc.SaveKraj(ime, posta);
-                AddRowToTables(new Object[]{ime, posta});
+                //AddRowToTables(new Object[]{ime, posta});
 
                 textField9.setText("");
                 textField10.setText("");
@@ -581,6 +598,23 @@ public class Home {
                 display.setIcon(new ImageIcon(newimg));
             }
         });
+        btn_ShowChart.addActionListener(actionEvent -> {
+            DefaultCategoryDataset chartset = new DefaultCategoryDataset();
+            chartset.setValue(20, "test", "neki");
+            chartset.setValue(24, "test", "un" );
+            chartset.setValue(60, "test", "drug" );
+            chartset.setValue(26, "test", "krneki" );
+
+            JFreeChart jchart = ChartFactory.createBarChart("Graf",
+                    "nameneki", "drug neki", chartset, PlotOrientation.VERTICAL,
+                    true, true, false);
+            CategoryPlot plot = jchart.getCategoryPlot();
+            plot.setRangeGridlinePaint(Color.red);
+
+            ChartFrame chartfrm = new ChartFrame("Delovna mesta", jchart, true);
+            chartfrm.setVisible(true);
+            chartfrm.setSize(1000, 600);
+        });
     }
 
     private void setTables(){
@@ -593,13 +627,33 @@ public class Home {
                 null,
                 columnsPosts
         ));
+
+        //---------------------------------------------------------------
+        ArrayList<DelovnaMesta> seznam = dc.Return_Objave();
         DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
-        for(String line:dc.Return_Objave()){
-            modelPosts.addRow(line.split(","));
+        String n = "Naroči se";
+        for(DelovnaMesta item: seznam){
+            File p = new File(item.FilePath);
+            ImageIcon ih = new ImageIcon(p.toString());
+            Image newimg = ih.getImage().getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
+            slikaIzBaze.setIcon(new ImageIcon(newimg));
+            //label se overwrita pa ne dela, možno rešitev: label za vsako sliko
+            modelPosts.addRow(new Object[]{item.Naziv, item.Opis, item.Placa, item.Trajanje, item.Delovnik, item.Sifra, item.Prosto, item.Kraj, item.Podjetje, slikaIzBaze, n});
         }
+
+        //---------------------------------------------------------------
+
+        postsTable.getColumn("Slika").setCellRenderer(new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
+                TableColumn cm = jTable.getColumn("Slika");
+                cm.setMaxWidth(60);
+                jTable.setRowHeight(60);
+                return (Component) o;
+            }
+        });
         postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
         postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
-
 
         companyTable.setModel(new DefaultTableModel(
                 null,
@@ -627,8 +681,8 @@ public class Home {
         for(String line:dc.Return_Narocanja()){
             modelNarocanja.addRow(line.split(","));
         }
-    }
 
+    }
     private void AddRowToTables(Object[] data){
         if(data.length == 2){
             DefaultTableModel modelKraji = (DefaultTableModel)krajiTable.getModel();
@@ -661,7 +715,6 @@ public class Home {
             setText((obj==null) ? "":obj.toString());
             return this;
         }
-
     }
 
     class ButtonEditor extends DefaultCellEditor
@@ -705,17 +758,9 @@ public class Home {
                         String s = datum.toString().split("\\.")[0];
                         Timestamp ts = Timestamp.valueOf(s);
 
-                        //JOptionPane.showMessageDialog(null, prosto);
                         dc.Insert_Narocanja(ts, mail_studenta, sifra);
-
                         AddRowToTables(new Object[]{ts, mail_studenta, naziv, sifra});
-                        //clicked = false;
-                        //btn.setEnabled(false);
-                        /* nek problem tuki
-                        btn.setEnabled(false);
-                        prosto--;
-                        dc.Posodobi_PMesta(prosto, id_o);
-                        setTables();*/
+                        //nared da se zmanjsajo prosta mesta ko se en naroci
                     }
                     clicked = false;
                 }
@@ -736,5 +781,5 @@ public class Home {
             super.fireEditingStopped();
         }
     }
-
 }
+

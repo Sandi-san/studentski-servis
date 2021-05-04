@@ -67,7 +67,6 @@ public class DatabaseConnection {
         catch (SQLException e){
             e.printStackTrace();
         }
-
     }
 
     public ArrayList<String> Return_Vse_Kraje(){
@@ -173,8 +172,8 @@ public class DatabaseConnection {
         return isTrue;
     }
 
-    public ArrayList<String> Return_Objave(){
-        ArrayList <String> objave =  new ArrayList<>();
+    public ArrayList<DelovnaMesta> Return_Objave(){
+        ArrayList <DelovnaMesta> objave =  new ArrayList<>();
 
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
@@ -190,13 +189,11 @@ public class DatabaseConnection {
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
-                String Slika = null;
-                if(rs.getString("slika_dmesta") != null)
-                    Slika = rs.getString("slika_dmesta");
-                else
-                    Slika = "Ni slike";
+                String Slika = rs.getString("slika_dmesta");
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + e + "," + g + "," + Plac + "," + Kraj + "," + Podjetje +  "," + Slika + "," + "Naroči se");
+                DelovnaMesta dm = new DelovnaMesta(Naziv, Opis, Placa, Trajanje, e, g, Plac, Kraj, Podjetje, Slika);
+
+                objave.add(dm);
             }
         }
         catch(SQLException e){
@@ -465,10 +462,8 @@ public class DatabaseConnection {
                 String Slika = null;
                 if(rs.getString("slika_dmesta") != null)
                     Slika = rs.getString("slika_dmesta");
-                else
-                    Slika = "Ni slike";
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + d + "," + s + "," + Plac + "," + Kraj + "," + Podjetje + "," + Slika + "," + "Naroči se");
+                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + d + "," + s + "," + Plac + "," + Kraj + "," + Podjetje +  "," + Slika + "," + "Naroči se");
             }
         }
         catch (SQLException e){
@@ -483,10 +478,10 @@ public class DatabaseConnection {
         return n;
     }
 
-    public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, String j){
+    public void CreatePost(String a, String b, String c, String d, String g, String z, int h, String k, String p, String j, String file){
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
-            String sql = "INSERT INTO delovna_mesta(naziv, opis, placa, trajanje, delovnik, sifra, prosta_mesta, kraj_id, podjetje_id, admin_id) VALUES('" + a + "', '" + b + "', '" + c + "', '" + d + "', '" + g +"', '" + z + "', '" + h +"', (SELECT id FROM kraji WHERE ime = '" + k +"') , (SELECT id FROM podjetja WHERE naslov = '" + p + "'), (SELECT id FROM admini WHERE email = '" + j + "') )";
+            String sql = "INSERT INTO delovna_mesta(naziv, opis, placa, trajanje, delovnik, sifra, prosta_mesta, kraj_id, podjetje_id, admin_id, slika_dmesta) VALUES('" + a + "', '" + b + "', '" + c + "', '" + d + "', '" + g +"', '" + z + "', '" + h +"', (SELECT id FROM kraji WHERE ime = '" + k +"') , (SELECT id FROM podjetja WHERE naslov = '" + p + "'), (SELECT id FROM admini WHERE email = '" + j + "'), '" + file + "')";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
@@ -506,7 +501,6 @@ public class DatabaseConnection {
     }
 
     public int Get_ID_Objave(String a, String b, String c, String d, String l, String f, int h, String k, String p){
-        //ArrayList <int> objave =  new ArrayList<>();
         int i = 1;
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
