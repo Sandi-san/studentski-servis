@@ -449,15 +449,15 @@ public class DatabaseConnection {
             String sql = null;
 
             if(kraj == "Vse")
-                sql = "SELECT k.st_delovnih_mest, k.st_studentov, COUNT(n.student_id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id";
+                sql = "SELECT COUNT(k.st_delovnih_mest), COUNT(k.st_studentov), COUNT(n.id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id GROUP BY k.st_delovnih_mest, k.st_studentov";
             else
-                sql = "SELECT k.st_delovnih_mest, k.st_studentov, COUNT(n.student_id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id WHERE (k.ime = '" + kraj + "')";
+                sql = "SELECT k.st_delovnih_mest, k.st_studentov, COUNT(n.student_id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id WHERE (k.ime = '" + kraj + "') GROUP BY k.st_delovnih_mest, k.st_studentov";
 
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
-                int st_de = rs.getInt(0);
-                int st_stu = rs.getInt(1);
-                int st_ns = rs.getInt(2);
+                int st_de = rs.getInt(1);
+                int st_stu = rs.getInt(2);
+                int st_ns = rs.getInt(3);
 
                 Kraj k = new Kraj(st_de, st_stu, st_ns);
                 info.add(k);

@@ -28,6 +28,7 @@ public class Home {
     static String mail_studenta, mail_admina;
     static int id_o, id_p, id_k, id_n;
     static int p_Mesta;
+    int st_stu, st_dm, st_n;
 
     DatabaseConnection dc = new DatabaseConnection();
 
@@ -606,16 +607,23 @@ public class Home {
             }
         });
         btn_ShowChart.addActionListener(actionEvent -> {
-            //if - else(če je combo box text "Vse" nardi graf za skupno število delovnih, študentov pa število študentov naročenih
+            //ne vrže prave podatke iz baze o številu študentov, delovnih mest,...
+            for(Kraj item:dc.Return_Kraj_Info(krajiCombo.getSelectedItem().toString())){
+                st_dm = item.st_delovmnmihMest;
+                st_stu = item.st_studentov;
+                st_n = item.st_narocanj;
+            }
+
             DefaultCategoryDataset chartset = new DefaultCategoryDataset();
-            chartset.setValue(20, "Št. delovnih mest v tem kraju", "a");
-            chartset.setValue(24, "Št. študentov v tem kraju", "b" );
-            chartset.setValue(60, "Št. študentov naročenih na delovna mesta v tem kraju", "c" );
+            chartset.setValue(st_dm, "Št. delovnih mest", "Delovna mesta");
+            chartset.setValue(st_stu, "Št. študentov", "Študenti" );
+            chartset.setValue(st_n, "Št. študentov naročenih na delovna mesta", "Naročanja" );
             //chartset.setValue(26, "test", "krneki" );
 
             JFreeChart jchart = ChartFactory.createBarChart(krajiCombo.getSelectedItem().toString(),
                     "Informacije o kraju", "Število", chartset, PlotOrientation.VERTICAL,
                     true, true, false);
+
             CategoryPlot plot = jchart.getCategoryPlot();
             plot.setRangeGridlinePaint(Color.red);
 
