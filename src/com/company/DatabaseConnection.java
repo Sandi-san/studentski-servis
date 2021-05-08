@@ -172,8 +172,8 @@ public class DatabaseConnection {
         return isTrue;
     }
 
-    public ArrayList<DelovnaMesta> Return_Objave(){
-        ArrayList <DelovnaMesta> objave =  new ArrayList<>();
+    public ArrayList<DelovnoMesto> Return_Objave(){
+        ArrayList <DelovnoMesto> objave =  new ArrayList<>();
 
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
@@ -191,7 +191,7 @@ public class DatabaseConnection {
                 String Podjetje = rs.getString("naslov");
                 String Slika = rs.getString("slika_dmesta");
 
-                DelovnaMesta dm = new DelovnaMesta(Naziv, Opis, Placa, Trajanje, e, g, Plac, Kraj, Podjetje, Slika);
+                DelovnoMesto dm = new DelovnoMesto(Naziv, Opis, Placa, Trajanje, e, g, Plac, Kraj, Podjetje, Slika);
 
                 objave.add(dm);
             }
@@ -442,9 +442,35 @@ public class DatabaseConnection {
         }
     }
 
-    public ArrayList<String> Return_Kraj_Objava(String kraj){
-        ArrayList <String> objave =  new ArrayList<>();
+    public ArrayList<Kraj> Return_Kraj_Info(String kraj){
+        ArrayList <Kraj> info =  new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = null;
 
+            if(kraj == "Vse")
+                sql = "SELECT k.st_delovnih_mest, k.st_studentov, COUNT(n.student_id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id";
+            else
+                sql = "SELECT k.st_delovnih_mest, k.st_studentov, COUNT(n.student_id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id WHERE (k.ime = '" + kraj + "')";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int st_de = rs.getInt(0);
+                int st_stu = rs.getInt(1);
+                int st_ns = rs.getInt(2);
+
+                Kraj k = new Kraj(st_de, st_stu, st_ns);
+                info.add(k);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return info;
+    }
+
+    public ArrayList<DelovnoMesto> Return_Kraj_Objava(String kraj){
+        ArrayList <DelovnoMesto> objave =  new ArrayList<>();
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
             String sql = "SELECT dm.naziv,dm.opis,dm.placa,dm.trajanje, dm.delovnik, dm.sifra,dm.prosta_mesta,k.ime,p.naslov, dm.slika_dmesta FROM delovna_mesta dm INNER JOIN kraji k ON dm.kraj_id = k.id INNER JOIN podjetja p ON dm.podjetje_id = p.id WHERE (k.ime = '" + kraj + "') ";
@@ -459,11 +485,10 @@ public class DatabaseConnection {
                 int Plac = rs.getInt("prosta_mesta");
                 String Kraj = rs.getString("ime");
                 String Podjetje = rs.getString("naslov");
-                String Slika = null;
-                if(rs.getString("slika_dmesta") != null)
-                    Slika = rs.getString("slika_dmesta");
+                String Slika = rs.getString("slika_dmesta");
 
-                objave.add(Naziv + "," + Opis + "," + Placa + "," + Trajanje + "," + d + "," + s + "," + Plac + "," + Kraj + "," + Podjetje +  "," + Slika + "," + "Naroči se");
+                DelovnoMesto dm = new DelovnoMesto(Naziv, Opis, Placa, Trajanje, d, s, Plac, Kraj, Podjetje, Slika);
+                objave.add(dm);
             }
         }
         catch (SQLException e){

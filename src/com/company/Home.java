@@ -126,21 +126,28 @@ public class Home {
             String ime = krajiCombo.getSelectedItem().toString();
             DefaultTableModel model = (DefaultTableModel)postsTable.getModel();
             model.setRowCount(0);
-            /*if(ime.equals("Vse")){
-                for(String line:dc.Return_Objave()){
-                    model.addRow(line.split(","));
-                    postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
-                    postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
+            String n = "Naroči se";
+            if(ime.equals("Vse")){
+                for(DelovnoMesto item:dc.Return_Objave()){
+                    model.addRow(new Object[]{item.Naziv, item.Opis, item.Placa, item.Trajanje, item.Delovnik, item.Sifra, item.Prosto, item.Kraj, item.Podjetje, slikaIzBaze, n});
                 }
             }
             else{
-                for(String line:dc.Return_Kraj_Objava(ime)){
-                    model.addRow(line.split(","));
-                    postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
-                    postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
+                for(DelovnoMesto item :dc.Return_Kraj_Objava(ime)){
+                    model.addRow(new Object[]{item.Naziv, item.Opis, item.Placa, item.Trajanje, item.Delovnik, item.Sifra, item.Prosto, item.Kraj, item.Podjetje, slikaIzBaze, n});
                 }
-            }*/
-
+            }
+            postsTable.getColumn("Slika").setCellRenderer(new TableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
+                    TableColumn cm = jTable.getColumn("Slika");
+                    cm.setMaxWidth(60);
+                    jTable.setRowHeight(60);
+                    return (Component) o;
+                }
+            });
+            postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
+            postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
         });
 
         title.setFont(new Font("TimesRoman", Font.PLAIN, 30));
@@ -599,14 +606,15 @@ public class Home {
             }
         });
         btn_ShowChart.addActionListener(actionEvent -> {
+            //if - else(če je combo box text "Vse" nardi graf za skupno število delovnih, študentov pa število študentov naročenih
             DefaultCategoryDataset chartset = new DefaultCategoryDataset();
-            chartset.setValue(20, "test", "neki");
-            chartset.setValue(24, "test", "un" );
-            chartset.setValue(60, "test", "drug" );
-            chartset.setValue(26, "test", "krneki" );
+            chartset.setValue(20, "Št. delovnih mest v tem kraju", "a");
+            chartset.setValue(24, "Št. študentov v tem kraju", "b" );
+            chartset.setValue(60, "Št. študentov naročenih na delovna mesta v tem kraju", "c" );
+            //chartset.setValue(26, "test", "krneki" );
 
-            JFreeChart jchart = ChartFactory.createBarChart("Graf",
-                    "nameneki", "drug neki", chartset, PlotOrientation.VERTICAL,
+            JFreeChart jchart = ChartFactory.createBarChart(krajiCombo.getSelectedItem().toString(),
+                    "Informacije o kraju", "Število", chartset, PlotOrientation.VERTICAL,
                     true, true, false);
             CategoryPlot plot = jchart.getCategoryPlot();
             plot.setRangeGridlinePaint(Color.red);
@@ -628,11 +636,10 @@ public class Home {
                 columnsPosts
         ));
 
-        //---------------------------------------------------------------
-        ArrayList<DelovnaMesta> seznam = dc.Return_Objave();
+        ArrayList<DelovnoMesto> seznam = dc.Return_Objave();
         DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
         String n = "Naroči se";
-        for(DelovnaMesta item: seznam){
+        for(DelovnoMesto item: seznam){
             File p = new File(item.FilePath);
             ImageIcon ih = new ImageIcon(p.toString());
             Image newimg = ih.getImage().getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
@@ -640,8 +647,6 @@ public class Home {
             //label se overwrita pa ne dela, možno rešitev: label za vsako sliko
             modelPosts.addRow(new Object[]{item.Naziv, item.Opis, item.Placa, item.Trajanje, item.Delovnik, item.Sifra, item.Prosto, item.Kraj, item.Podjetje, slikaIzBaze, n});
         }
-
-        //---------------------------------------------------------------
 
         postsTable.getColumn("Slika").setCellRenderer(new TableCellRenderer() {
             @Override
