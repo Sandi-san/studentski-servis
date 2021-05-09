@@ -449,9 +449,9 @@ public class DatabaseConnection {
             String sql = null;
 
             if(kraj == "Vse")
-                sql = "SELECT COUNT(k.st_delovnih_mest), COUNT(k.st_studentov), COUNT(n.id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id GROUP BY k.st_delovnih_mest, k.st_studentov";
+                sql = "SELECT SUM(k.st_delovnih_mest) AS stevilo_delovnih_mest, SUM(k.st_studentov) AS stevilo_studentov, COUNT(n.id) AS stevilo_narocanj FROM studenti s RIGHT OUTER JOIN kraji k ON k.id = s.kraj_id LEFT OUTER JOIN narocanja n ON n.student_id = s.id";
             else
-                sql = "SELECT k.st_delovnih_mest, k.st_studentov, COUNT(n.student_id) FROM studenti s INNER JOIN kraji k ON k.id = s.kraj_id INNER JOIN narocanja n ON n.student_id = s.id WHERE (k.ime = '" + kraj + "') GROUP BY k.st_delovnih_mest, k.st_studentov";
+                sql = "SELECT SUM(k.st_delovnih_mest) AS stevilo_delovnih_mest_v_kraju, SUM(k.st_studentov) AS stevilo_studentov_v_kraju, COUNT(n.student_id) AS stevilo_narocanj FROM studenti s RIGHT OUTER JOIN kraji k ON k.id = s.kraj_id LEFT OUTER JOIN narocanja n ON n.student_id = s.id WHERE (k.ime = '" + kraj + "')";
 
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){

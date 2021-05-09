@@ -186,10 +186,8 @@ public class Home {
                 if(naziv == "" || desc== "" || placa== "" || trajanje== "" || d== "" || sifra== "" || textField6.toString()== "" || ic == null)
                     JOptionPane.showMessageDialog(null, "Moraš vse vnesti");
                 else{
-                    DatabaseConnection db = new DatabaseConnection();
-
-                    //infinite errors ker iz baze vzamem pot panisem convertu pot v actual sliko
-                    //AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, display, n});
+                    //DatabaseConnection db = new DatabaseConnection();
+                    AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, display, n});
                     File saveFile = new File("src/images/"+ filename);
                     try {
                         if(filename.toLowerCase().endsWith(".jpg")){
@@ -213,7 +211,8 @@ public class Home {
                             return (Component) o;
                         }
                     });
-                    db.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name, saveFile.toString());
+
+                    dc.CreatePost(naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, name, saveFile.toString());
                 }
 
                 textArea1.setText("");
@@ -608,6 +607,8 @@ public class Home {
         });
         btn_ShowChart.addActionListener(actionEvent -> {
             //ne vrže prave podatke iz baze o številu študentov, delovnih mest,...
+            //ce dam za vsako tabelo posebi dela(select sum(st_delovnih_mest), sum(st_studentov) from kraji,
+            // select count(id) from narocanja)
             for(Kraj item:dc.Return_Kraj_Info(krajiCombo.getSelectedItem().toString())){
                 st_dm = item.st_delovmnmihMest;
                 st_stu = item.st_studentov;
