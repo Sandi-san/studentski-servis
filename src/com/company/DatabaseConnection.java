@@ -43,7 +43,6 @@ public class DatabaseConnection {
     public Connection Connect() throws SQLException {
         Connection conn = null;
         try {
-
             String jdbcURL = "jdbc:postgresql://ec2-52-213-167-210.eu-west-1.compute.amazonaws.com:5432/d72om3lphmskj1";
             String username = "agzigsarirffns";
             String password = "0bbb063c271cbf8b6ad1108669ae17fe0e978ab530c693b62fdc6b4debae87ca";
@@ -449,17 +448,19 @@ public class DatabaseConnection {
             String sql = null;
 
             if(kraj == "Vse")
-                sql = "SELECT SUM(k.st_delovnih_mest) AS stevilo_delovnih_mest, SUM(k.st_studentov) AS stevilo_studentov, COUNT(n.id) AS stevilo_narocanj FROM studenti s RIGHT OUTER JOIN kraji k ON k.id = s.kraj_id LEFT OUTER JOIN narocanja n ON n.student_id = s.id";
+                sql = "SELECT (SELECT SUM(st_delovnih_mest) FROM kraji) st_delovnih_mest_v_kraju, (SELECT COUNT(id) FROM narocanja) st_narocanj FROM kraji;";
             else
-                sql = "SELECT SUM(k.st_delovnih_mest) AS stevilo_delovnih_mest_v_kraju, SUM(k.st_studentov) AS stevilo_studentov_v_kraju, COUNT(n.student_id) AS stevilo_narocanj FROM studenti s RIGHT OUTER JOIN kraji k ON k.id = s.kraj_id LEFT OUTER JOIN narocanja n ON n.student_id = s.id WHERE (k.ime = '" + kraj + "')";
+                sql = "SELECT (SELECT SUM(st_delovnih_mest) from kraji WHERE ime = 'Artiče') st_delovnih_mest_v_kraju," +
+                        "(SELECT COUNT(n.id) from narocanja n LEFT JOIN studenti s ON n.student_id = s.id " +
+                        "RIGHT JOIN kraji k ON k.id = s.kraj_id WHERE (n.delovno_mesto_id IN (SELECT id FROM delovna_mesta WHERE kraj_id = (SELECT id FROM " +
+                        "kraji WHERE ime = '" + kraj + "')) )) stevilo_narocanj FROM kraji WHERE ime = '" + kraj + "';";
 
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 int st_de = rs.getInt(1);
-                int st_stu = rs.getInt(2);
-                int st_ns = rs.getInt(3);
+                int st_ns = rs.getInt(2);
 
-                Kraj k = new Kraj(st_de, st_stu, st_ns);
+                Kraj k = new Kraj(st_de, st_ns);
                 info.add(k);
             }
         }

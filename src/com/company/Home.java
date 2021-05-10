@@ -7,7 +7,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import java.awt.Color;
 import org.jfree.chart.ChartFrame;
-import org.jfree.chart.ChartPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,7 +27,7 @@ public class Home {
     static String mail_studenta, mail_admina;
     static int id_o, id_p, id_k, id_n;
     static int p_Mesta;
-    int st_stu, st_dm, st_n;
+    int st_dm, st_n;
 
     DatabaseConnection dc = new DatabaseConnection();
 
@@ -85,7 +84,7 @@ public class Home {
     private JTextField textField14;
     private JButton spremeniSliko;
     private JLabel slikaIzBaze;
-    private JButton btn_ShowChart;
+    private JButton btn_ShowChartDm;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
@@ -605,25 +604,19 @@ public class Home {
                 display.setIcon(new ImageIcon(newimg));
             }
         });
-        btn_ShowChart.addActionListener(actionEvent -> {
-            //ne vrže prave podatke iz baze o številu študentov, delovnih mest,...
-            //ce dam za vsako tabelo posebi dela(select sum(st_delovnih_mest), sum(st_studentov) from kraji,
-            // select count(id) from narocanja)
+        btn_ShowChartDm.addActionListener(actionEvent -> {
             for(Kraj item:dc.Return_Kraj_Info(krajiCombo.getSelectedItem().toString())){
-                st_dm = item.st_delovmnmihMest;
-                st_stu = item.st_studentov;
+                st_dm = item.st_delovnihMest;
                 st_n = item.st_narocanj;
             }
 
             DefaultCategoryDataset chartset = new DefaultCategoryDataset();
             chartset.setValue(st_dm, "Št. delovnih mest", "Delovna mesta");
-            chartset.setValue(st_stu, "Št. študentov", "Študenti" );
             chartset.setValue(st_n, "Št. študentov naročenih na delovna mesta", "Naročanja" );
-            //chartset.setValue(26, "test", "krneki" );
 
             JFreeChart jchart = ChartFactory.createBarChart(krajiCombo.getSelectedItem().toString(),
-                    "Informacije o kraju", "Število", chartset, PlotOrientation.VERTICAL,
-                    true, true, false);
+                    "Informacije o delovnih mestih", "Število", chartset, PlotOrientation.VERTICAL,
+                    true, false, false);
 
             CategoryPlot plot = jchart.getCategoryPlot();
             plot.setRangeGridlinePaint(Color.red);
