@@ -470,6 +470,34 @@ public class DatabaseConnection {
         return info;
     }
 
+    public ArrayList<Podjetje> Return_Podjetje_Info(String kraj){
+        ArrayList <Podjetje> info =  new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = null;
+
+            if(kraj == "Vse")
+                sql = "SELECT (SELECT COUNT(id) FROM podjetja) st_podjetij_v_kraju, (SELECT COUNT(id) FROM delovna_mesta) st_delovnih_mest_ki_jih_imajo_v_kraju FROM kraji";
+            else
+                sql = "SELECT (SELECT COUNT(p.id) FROM podjetja p inner join kraji k ON k.id = p.kraj_id WHERE ime = '" + kraj + "') st_podjetij_v_kraju," +
+                        "(SELECT count(dm.id) FROM podjetja p left JOIN kraji k  ON k.id = p.kraj_id LEFT JOIN " +
+                        "delovna_mesta dm ON dm.podjetje_id = p.id  WHERE (dm.kraj_id IN (SELECT id from kraji where ime = '" + kraj + "'))) st_delovnih_mest_ki_jih_imajo_v_kraju " +
+                        "FROM kraji where ime = '" + kraj + "'";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int st_p = rs.getInt(1);
+                int st_dm = rs.getInt(2);
+
+                Podjetje k = new Podjetje(st_p, st_dm);
+                info.add(k);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return info;
+    }
     public ArrayList<DelovnoMesto> Return_Kraj_Objava(String kraj){
         ArrayList <DelovnoMesto> objave =  new ArrayList<>();
         try(Connection connection = Connect()){

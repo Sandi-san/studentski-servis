@@ -27,7 +27,7 @@ public class Home {
     static String mail_studenta, mail_admina;
     static int id_o, id_p, id_k, id_n;
     static int p_Mesta;
-    int st_dm, st_n;
+    int st_dm, st_n, st_p, st_d;
 
     DatabaseConnection dc = new DatabaseConnection();
 
@@ -85,6 +85,7 @@ public class Home {
     private JButton spremeniSliko;
     private JLabel slikaIzBaze;
     private JButton btn_ShowChartDm;
+    private JButton Btn_ShowChartP;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
@@ -613,6 +614,27 @@ public class Home {
             DefaultCategoryDataset chartset = new DefaultCategoryDataset();
             chartset.setValue(st_dm, "Št. delovnih mest", "Delovna mesta");
             chartset.setValue(st_n, "Št. študentov naročenih na delovna mesta", "Naročanja" );
+
+            JFreeChart jchart = ChartFactory.createBarChart(krajiCombo.getSelectedItem().toString(),
+                    "Informacije o delovnih mestih", "Število", chartset, PlotOrientation.VERTICAL,
+                    true, false, false);
+
+            CategoryPlot plot = jchart.getCategoryPlot();
+            plot.setRangeGridlinePaint(Color.red);
+
+            ChartFrame chartfrm = new ChartFrame("Delovna mesta", jchart, true);
+            chartfrm.setVisible(true);
+            chartfrm.setSize(1000, 600);
+        });
+        Btn_ShowChartP.addActionListener(actionEvent -> {
+            for(Podjetje item:dc.Return_Podjetje_Info(comboBox1.getSelectedItem().toString())){
+                st_p = item.st_podjetij;
+                st_d = item.dMesta;
+            }
+
+            DefaultCategoryDataset chartset = new DefaultCategoryDataset();
+            chartset.setValue(st_p, "Št. podjetij", "Podjetja");
+            chartset.setValue(st_d, "Št. delovnih mest, ki jih imajo podjetja", "Delovna mesta" );
 
             JFreeChart jchart = ChartFactory.createBarChart(krajiCombo.getSelectedItem().toString(),
                     "Informacije o delovnih mestih", "Število", chartset, PlotOrientation.VERTICAL,
