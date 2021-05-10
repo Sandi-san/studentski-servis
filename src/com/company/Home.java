@@ -27,7 +27,7 @@ public class Home {
     static String mail_studenta, mail_admina;
     static int id_o, id_p, id_k, id_n;
     static int p_Mesta;
-    int st_dm, st_n, st_p, st_d;
+    int st_dm, st_n, st_p, st_d, st_k, st_pk;
 
     DatabaseConnection dc = new DatabaseConnection();
 
@@ -86,6 +86,7 @@ public class Home {
     private JLabel slikaIzBaze;
     private JButton btn_ShowChartDm;
     private JButton Btn_ShowChartP;
+    private JButton Btn_ShowChartK;
 
     public static void DobMail(String ab){ mail_admina = ab; }
     public static void MailStudenta(String a){mail_studenta = a;}
@@ -637,7 +638,28 @@ public class Home {
             chartset.setValue(st_d, "Št. delovnih mest, ki jih imajo podjetja", "Delovna mesta" );
 
             JFreeChart jchart = ChartFactory.createBarChart(krajiCombo.getSelectedItem().toString(),
-                    "Informacije o delovnih mestih", "Število", chartset, PlotOrientation.VERTICAL,
+                    "Informacije o podjetjih", "Število", chartset, PlotOrientation.VERTICAL,
+                    true, false, false);
+
+            CategoryPlot plot = jchart.getCategoryPlot();
+            plot.setRangeGridlinePaint(Color.red);
+
+            ChartFrame chartfrm = new ChartFrame("Delovna mesta", jchart, true);
+            chartfrm.setVisible(true);
+            chartfrm.setSize(1000, 600);
+        });
+        Btn_ShowChartK.addActionListener(actionEvent -> {
+            for(Kraj item:dc.Return_Kraj_InfoN()){
+                st_k = item.st_delovnihMest;
+                st_pk = item.st_narocanj;
+            }
+
+            DefaultCategoryDataset chartset = new DefaultCategoryDataset();
+            chartset.setValue(st_k, "Št. krajev", "Kraji");
+            chartset.setValue(st_pk, "Št. podjetij", "Podjetja" );
+
+            JFreeChart jchart = ChartFactory.createBarChart("Vse",
+                    "Informacije o krajih", "Število", chartset, PlotOrientation.VERTICAL,
                     true, false, false);
 
             CategoryPlot plot = jchart.getCategoryPlot();

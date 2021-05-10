@@ -469,7 +469,25 @@ public class DatabaseConnection {
         }
         return info;
     }
+    public ArrayList<Kraj> Return_Kraj_InfoN(){
+        ArrayList <Kraj> info =  new ArrayList<>();
+        try(Connection connection = Connect()){
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT (SELECT COUNT(id) FROM kraji) st_krajev, (SELECT COUNT(id) FROM podjetja) st_podjetij FROM kraji";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                int st_de = rs.getInt(1);
+                int st_ns = rs.getInt(2);
 
+                Kraj k = new Kraj(st_de, st_ns);
+                info.add(k);
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return info;
+    }
     public ArrayList<Podjetje> Return_Podjetje_Info(String kraj){
         ArrayList <Podjetje> info =  new ArrayList<>();
         try(Connection connection = Connect()){
