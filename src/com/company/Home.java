@@ -326,7 +326,7 @@ public class Home {
                 String kraj = model.getValueAt(index,7).toString();
                 String podjetje = model.getValueAt(index,8).toString();
 
-                p_Mesta = dc.Return_ProstaMesta(sifra);
+                //p_Mesta = dc.Return_ProstaMesta(sifra);
 
                 id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
             }
@@ -379,8 +379,9 @@ public class Home {
                 String telefon = textField8.getText();
                 String kraj = comboBox2.getSelectedItem().toString();
 
+                podjetjeCombo.addItem(naslov);
                 dc.AddCompany(naslov, telefon, kraj);
-                //AddRowToTables(new Object[]{naslov, telefon, kraj});
+                AddRowToTables(new Object[]{naslov, telefon, kraj});
 
                 textField7.setText("");
                 textField8.setText("");
@@ -469,7 +470,7 @@ public class Home {
                 int posta = Integer.parseInt(textField10.getText());
 
                 dc.SaveKraj(ime, posta);
-                //AddRowToTables(new Object[]{ime, posta});
+                AddRowToTables(new Object[]{ime, posta});
 
                 textField9.setText("");
                 textField10.setText("");
@@ -711,6 +712,7 @@ public class Home {
                 columnsCompany
         ));
         DefaultTableModel modelCompany = (DefaultTableModel)companyTable.getModel();
+
         for(String line:dc.Return_Vsa_Podjetja()){
             modelCompany.addRow(line.split(","));
         }
