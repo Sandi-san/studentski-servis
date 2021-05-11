@@ -43,9 +43,9 @@ public class DatabaseConnection {
     public Connection Connect() throws SQLException {
         Connection conn = null;
         try {
-            String jdbcURL = "jdbc:postgresql://ec2-52-213-167-210.eu-west-1.compute.amazonaws.com:5432/d72om3lphmskj1";
-            String username = "agzigsarirffns";
-            String password = "0bbb063c271cbf8b6ad1108669ae17fe0e978ab530c693b62fdc6b4debae87ca";
+            String jdbcURL = "jdbc:postgresql://ec2-174-129-225-160.compute-1.amazonaws.com:5432/dfb9ne0r15jl31";
+            String username = "lkdruotybqiygj";
+            String password = "d3a76b0edb876149390875f7906938fd1b3e23dc4bdd4680b41c65f3b17ce772";
             //Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(jdbcURL, username, password);
 

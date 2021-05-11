@@ -644,7 +644,7 @@ public class Home {
             CategoryPlot plot = jchart.getCategoryPlot();
             plot.setRangeGridlinePaint(Color.red);
 
-            ChartFrame chartfrm = new ChartFrame("Delovna mesta", jchart, true);
+            ChartFrame chartfrm = new ChartFrame("Podjetja", jchart, true);
             chartfrm.setVisible(true);
             chartfrm.setSize(1000, 600);
         });
@@ -665,7 +665,7 @@ public class Home {
             CategoryPlot plot = jchart.getCategoryPlot();
             plot.setRangeGridlinePaint(Color.red);
 
-            ChartFrame chartfrm = new ChartFrame("Delovna mesta", jchart, true);
+            ChartFrame chartfrm = new ChartFrame("Kraji", jchart, true);
             chartfrm.setVisible(true);
             chartfrm.setSize(1000, 600);
         });
