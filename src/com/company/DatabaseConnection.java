@@ -39,7 +39,6 @@ public class DatabaseConnection {
         return generatedPassword;
     }
 
-
     public Connection Connect() throws SQLException {
         Connection conn = null;
         try {
@@ -55,7 +54,6 @@ public class DatabaseConnection {
         }
         return conn;
     }
-
 
     public void SaveKraj(String ime_k, int posta) {
         try(Connection connection = Connect()){
@@ -104,7 +102,7 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
 
-            String sql = "INSERT INTO admini(email, pass) VALUES ('" + mail + "', '" + passs + "')";
+            String sql = "INSERT INTO admini(username, pass) VALUES ('" + mail + "', '" + passs + "')";
             stmt.executeUpdate(sql);
         }
         catch (SQLException e){
@@ -119,10 +117,10 @@ public class DatabaseConnection {
         try(Connection connection = Connect()){
             Statement stmt = connection.createStatement();
 
-            String sql = "SELECT email, pass FROM admini;";
+            String sql = "SELECT username, pass FROM admini;";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
-                String mail = rs.getString("email");
+                String mail = rs.getString("username");
                 String pass = rs.getString("pass");
 
                 if (mail.equals(email))
