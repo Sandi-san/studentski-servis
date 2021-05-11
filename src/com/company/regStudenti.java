@@ -33,7 +33,6 @@ public class regStudenti {
         jframe.setVisible(true);
         mainTitle.setFont(new Font("TimesRoman", Font.PLAIN, 30));
 
-        //Prikaž kraje v comboboxu
         DatabaseConnection dc = new DatabaseConnection();
         dc.Return_Kraje().forEach((e) -> PrijavakrajiCombo.addItem(e));
 
@@ -53,19 +52,11 @@ public class regStudenti {
         });
 
         SignUp.addActionListener(actionEvent -> {
-            //sJOptionPane.showMessageDialog(null, spol.toString());
-
             String ime = textFieldIme.getText();
             String priimek = textFieldPriimek.getText();
-            //spol
+
             String datumroj = textFieldDatum.getText();
-            /*try {
-                Date realdatumroj = new SimpleDateFormat("yyyy-MM-dd").parse(datumroj);
-                System.out.println("pru: " + datumroj + "Drug: \t" + realdatumroj);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-             */
+
             String tel = textFieldTelefon.getText();
             String user = textFieldUsername.getText();
             String email = textField1.getText();
@@ -86,9 +77,5 @@ public class regStudenti {
                 e.printStackTrace();
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new regStudenti();
     }
 }

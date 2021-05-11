@@ -187,7 +187,6 @@ public class Home {
                 if(naziv == "" || desc== "" || placa== "" || trajanje== "" || d== "" || sifra== "" || textField6.toString()== "" || ic == null)
                     JOptionPane.showMessageDialog(null, "Moraš vse vnesti");
                 else{
-                    //DatabaseConnection db = new DatabaseConnection();
                     AddRowToTables(new Object[]{naziv, desc, placa, trajanje, d, sifra, fraj, kraj, podjetje, display, n});
                     File saveFile = new File("src/images/"+ filename);
                     try {
@@ -225,7 +224,7 @@ public class Home {
                 textField6.setText("");
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         brisanjeObjavButton.addActionListener(actionEvent -> {
@@ -246,7 +245,7 @@ public class Home {
                 brisanjeObjavButton.setEnabled(false);
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         posodabljanjeObjavButton.addActionListener(actionEvent -> {
@@ -282,19 +281,20 @@ public class Home {
                     textField4.setText("");
                     textField5.setText("");
                     textField6.setText("");
-                    //postsTable.getSelectionModel().clearSelection();
+                    String n = "Naroči se";
+
                     DefaultTableModel modelPosts = (DefaultTableModel)postsTable.getModel();
                     model.setRowCount(0);
-                    /*for(String line:dc.Return_Objave()){
-                        modelPosts.addRow(line.split(","));
-                    }*/
-                    postsTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
-                    postsTable.getColumnModel().getColumn(9).setCellEditor(new ButtonEditor(new JTextField()));
+                    for(DelovnoMesto item:dc.Return_Objave()){
+                        modelPosts.addRow(new Object[]{item.Naziv, item.Opis, item.Placa, item.Trajanje, item.Delovnik, item.Sifra, item.Prosto, item.Kraj, item.Podjetje, slikaIzBaze, n});
+                    }
+                    postsTable.getColumnModel().getColumn(10).setCellRenderer(new ButtonRenderer());
+                    postsTable.getColumnModel().getColumn(10).setCellEditor(new ButtonEditor(new JTextField()));
                     posodabljanjeObjavButton.setEnabled(false);
                 }
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         postsTable.addMouseListener(new MouseAdapter() {
@@ -326,7 +326,7 @@ public class Home {
                 String kraj = model.getValueAt(index,7).toString();
                 String podjetje = model.getValueAt(index,8).toString();
 
-                //p_Mesta = dc.Return_ProstaMesta(sifra);
+                p_Mesta = dc.Return_ProstaMesta(sifra);
 
                 id_o = dc.Get_ID_Objave(naziv, opis, placa, trajanje, delovnik, sifra, prosto, kraj, podjetje);
             }
@@ -387,7 +387,7 @@ public class Home {
                 textField8.setText("");
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
 
@@ -430,7 +430,7 @@ public class Home {
                 deleteButtonC.setEnabled(false);
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         comboBox1.addItemListener(itemEvent -> {
@@ -461,7 +461,7 @@ public class Home {
                 posodobiButtonC.setEnabled(false);
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         dodajButtonK.addActionListener(actionEvent -> {
@@ -476,7 +476,7 @@ public class Home {
                 textField10.setText("");
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         krajiTable.addMouseListener(new MouseAdapter() {
@@ -516,7 +516,7 @@ public class Home {
                 zbrisiButtonK.setEnabled(false);
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         zbrisiButtonK.addActionListener(actionEvent -> {
@@ -531,8 +531,7 @@ public class Home {
                 zbrisiButtonK.setEnabled(false);
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni");
-
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
         });
 
         narocanjeTable.addMouseListener(new MouseAdapter() {
@@ -578,7 +577,7 @@ public class Home {
                 textField14.setText(null);
             }
             else
-                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice da izvedete to akcijo");
+                JOptionPane.showMessageDialog(null, "Morate imeti administratorske pravice");
 
             zbrisiButtonN.setEnabled(false);
         });
@@ -601,7 +600,7 @@ public class Home {
                 JOptionPane.showMessageDialog(null,"Preklicali ste izbiro");
             else{
                 String path = fd.getDirectory() + fd.getFile();
-                f = new File(path); //pot do slike
+                f = new File(path);
                 ic = new ImageIcon(f.toString());
                 Image newimg = ic.getImage().getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
                 display.setIcon(new ImageIcon(newimg));
@@ -801,7 +800,6 @@ public class Home {
                 if(prosto > 0){
                     if(clicked)
                     {
-                        //trigger za prosta mesta treba fiksat
                         DefaultTableModel postsModel = (DefaultTableModel)postsTable.getModel();
                         int index = postsTable.getSelectedRow();
                         String naziv = postsModel.getValueAt(index,0).toString();
@@ -813,14 +811,13 @@ public class Home {
 
                         dc.Insert_Narocanja(ts, mail_studenta, sifra);
                         AddRowToTables(new Object[]{ts, mail_studenta, naziv, sifra});
-                        //nared da se zmanjsajo prosta mesta ko se en naroci
                     }
                     clicked = false;
                 }
 
             }
             else
-                JOptionPane.showMessageDialog(null, "Niste prijavljeni");
+                JOptionPane.showMessageDialog(null, "Morate biti prijavljeni kot študent");
             return new String(lbl);
         }
 

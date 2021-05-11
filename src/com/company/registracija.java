@@ -21,7 +21,6 @@ public class registracija {
         jframe.setResizable(false);
         jframe.setVisible(true);
         mainTitle.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        //textField1.setPreferredSize(new Dimension(10,5));
 
         Btn_SignUp.addActionListener(actionEvent -> {
             String email = textField1.getText();
@@ -41,9 +40,5 @@ public class registracija {
                 e.printStackTrace();
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new registracija();
     }
 }

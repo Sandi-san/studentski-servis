@@ -32,7 +32,6 @@ public class prijavaStudenti {
                 String newPass = con.Encrypt(String.valueOf(geslo));
                 boolean yes = con.CheckStudent(email, newPass);
                 if (yes) {
-                    //Home.MailStudenta(email);
                     new Home();
                     jframe.dispose();
                 }
@@ -45,9 +44,5 @@ public class prijavaStudenti {
                 e.printStackTrace();
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new prijavaStudenti();
     }
 }

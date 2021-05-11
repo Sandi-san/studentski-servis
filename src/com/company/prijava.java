@@ -2,8 +2,6 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class prijava {
     private JButton Btn_SignIn;
@@ -45,9 +43,5 @@ public class prijava {
                 e.printStackTrace();
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new prijava();
     }
 }
